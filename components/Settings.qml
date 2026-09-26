@@ -367,12 +367,13 @@ Item {
                                     border.width: 1
                                     border.color: Theme.glassBorderSubtle
 
-                                    Row {
+                                    Item {
                                         anchors.fill: parent
                                         anchors.leftMargin: 16
                                         anchors.rightMargin: 16
 
                                         Column {
+                                            anchors.left: parent.left
                                             anchors.verticalCenter: parent.verticalCenter
                                             spacing: 2
                                             Text {
@@ -389,8 +390,6 @@ Item {
                                                 color: Theme.textMuted
                                             }
                                         }
-
-                                        Item { Layout.fillWidth: true; width: 1; height: 1 }
 
                                         // Toggle Switch
                                         AnimatedButton {

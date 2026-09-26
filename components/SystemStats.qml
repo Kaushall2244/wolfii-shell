@@ -1,0 +1,56 @@
+import QtQuick
+import "../Theme.js" as Theme
+
+Row {
+    id: root
+
+    // Reference to SystemData service
+    required property var systemData
+
+    spacing: 4
+
+    // CPU Metric (◉ 33)
+    SystemMetric {
+        symbol: "◉"
+        value: root.systemData ? root.systemData.cpuUsage.toString() : "0"
+        indicatorColor: {
+            var val = root.systemData ? root.systemData.cpuUsage : 0;
+            if (val > 80) return "#ff5555";
+            if (val > 50) return "#ffb86c";
+            return Theme.accent;
+        }
+        tooltipTitle: "CPU Usage"
+        tooltipDetail: (root.systemData ? root.systemData.cpuUsage : 0) + "%"
+    }
+
+    // RAM Metric (▣ 47)
+    SystemMetric {
+        symbol: "▣"
+        value: root.systemData ? root.systemData.ramUsage.toString() : "0"
+        indicatorColor: {
+            var val = root.systemData ? root.systemData.ramUsage : 0;
+            if (val > 85) return "#ff5555";
+            if (val > 65) return "#ffb86c";
+            return Theme.accent;
+        }
+        tooltipTitle: "RAM Usage"
+        tooltipDetail: (root.systemData ? root.systemData.ramUsage : 0) + "% (" + 
+                       (root.systemData ? root.systemData.ramUsedGb : 0) + " / " + 
+                       (root.systemData ? root.systemData.ramTotalGb : 0) + " GB)"
+    }
+
+    // Temperature Metric (⌁ 59°)
+    SystemMetric {
+        visible: root.systemData && root.systemData.hasTemp
+        symbol: "⌁"
+        value: (root.systemData ? root.systemData.tempCelsius : 0) + "°"
+        indicatorColor: {
+            var val = root.systemData ? root.systemData.tempCelsius : 0;
+            if (val > 80) return "#ff5555";
+            if (val > 65) return "#ffb86c";
+            return Theme.accent;
+        }
+        tooltipTitle: "Temperature"
+        tooltipDetail: (root.systemData ? root.systemData.tempCelsius : 0) + "°C"
+    }
+}

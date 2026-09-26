@@ -1,0 +1,14 @@
+# Qt / QML compiled cache
+*.qmlc
+*.jsc
+.qml/
+
+# OS / Editor temporary files
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+*.log

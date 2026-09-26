@@ -6,6 +6,7 @@ import "../Theme.js" as Theme
 Item {
     id: root
 
+    property var themeConfig: null
     property bool isOpen: false
     signal closeRequested()
 
@@ -18,13 +19,14 @@ Item {
     scale: isOpen ? 1.0 : 0.96
     y: isOpen ? 0 : -10
 
-    Behavior on opacity { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on scale { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on y { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
+    Behavior on opacity { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on scale { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on y { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
 
     GlassSurface {
         anchors.fill: parent
         level: 3
+        elevation: 2
         clip: true
 
         Column {
@@ -45,7 +47,7 @@ Item {
                     Text {
                         text: "󰂚"
                         font.pixelSize: 16
-                        color: Theme.accent
+                        color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                     }
 
                     Text {
@@ -53,7 +55,7 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 15
                         font.weight: Font.Bold
-                        color: Theme.text
+                        color: root.themeConfig ? root.themeConfig.text : Theme.text
                     }
                 }
 
@@ -68,8 +70,8 @@ Item {
                         width: 70
                         height: 26
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Theme.surface
-                        hoverBg: Theme.surfaceHover
+                        defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                         onClicked: {
                             var notifs = NotificationServer.trackedNotifications.values;
                             for (var i = 0; i < notifs.length; i++) {
@@ -83,7 +85,7 @@ Item {
                             font.family: Theme.fontFamily
                             font.pixelSize: 11
                             font.weight: Font.DemiBold
-                            color: Theme.textMuted
+                            color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                         }
                     }
 
@@ -92,14 +94,14 @@ Item {
                         width: 26
                         height: 26
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Theme.surface
-                        hoverBg: Theme.surfaceHover
+                        defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                         onClicked: root.closeRequested()
                         Text {
                             anchors.centerIn: parent
                             text: "✕"
                             font.pixelSize: 11
-                            color: Theme.textMuted
+                            color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                         }
                     }
                 }
@@ -129,7 +131,7 @@ Item {
                             anchors.horizontalCenter: parent.horizontalCenter
                             text: "󰂛"
                             font.pixelSize: 36
-                            color: Theme.textDim
+                            color: root.themeConfig ? root.themeConfig.textSubtle : Theme.textSubtle
                         }
 
                         Text {
@@ -137,7 +139,7 @@ Item {
                             text: "No new notifications"
                             font.family: Theme.fontFamily
                             font.pixelSize: 13
-                            color: Theme.textMuted
+                            color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                         }
                     }
                 }
@@ -147,9 +149,9 @@ Item {
                     width: notifList.width
                     height: contentCol.implicitHeight + 20
                     radius: Theme.cardRadius
-                    color: Theme.surfaceCard
+                    color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                     border.width: 1
-                    border.color: Theme.glassBorderSubtle
+                    border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                     Column {
                         id: contentCol
@@ -168,7 +170,7 @@ Item {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 11
                                 font.weight: Font.Bold
-                                color: Theme.accent
+                                color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                             }
 
                             // Dismiss single button
@@ -178,14 +180,14 @@ Item {
                                 width: 20
                                 height: 20
                                 cornerRadius: 10
-                                defaultBg: Theme.surface
-                                hoverBg: Theme.surfaceHover
+                                defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                                hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                                 onClicked: modelData.dismiss()
                                 Text {
                                     anchors.centerIn: parent
                                     text: "✕"
                                     font.pixelSize: 9
-                                    color: Theme.textMuted
+                                    color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                                 }
                             }
                         }
@@ -195,7 +197,7 @@ Item {
                             font.family: Theme.fontFamily
                             font.pixelSize: 13
                             font.weight: Font.DemiBold
-                            color: Theme.text
+                            color: root.themeConfig ? root.themeConfig.text : Theme.text
                             wrapMode: Text.Wrap
                             width: parent.width
                         }
@@ -205,7 +207,7 @@ Item {
                             text: modelData.body || ""
                             font.family: Theme.fontFamily
                             font.pixelSize: 11
-                            color: Theme.textMuted
+                            color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                             wrapMode: Text.Wrap
                             width: parent.width
                         }

@@ -6,6 +6,7 @@ import "../Theme.js" as Theme
 Item {
     id: root
 
+    property var themeConfig: null
     required property var systemData
     required property var networkService
     required property var audioService
@@ -26,13 +27,14 @@ Item {
     scale: isOpen ? 1.0 : 0.96
     y: isOpen ? 0 : -10
 
-    Behavior on opacity { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on scale { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on y { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
+    Behavior on opacity { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on scale { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on y { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
 
     GlassSurface {
         anchors.fill: parent
         level: 3
+        elevation: 2
         clip: true
 
         Column {
@@ -56,14 +58,14 @@ Item {
                         radius: Theme.smallRadius
                         color: Qt.rgba(255, 255, 255, 0.08)
                         border.width: 1
-                        border.color: Theme.glassBorder
+                        border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
                         Text {
                             anchors.centerIn: parent
                             text: "W"
                             font.family: Theme.fontFamily
                             font.pixelSize: 11
                             font.weight: Font.Black
-                            color: Theme.accent
+                            color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                         }
                     }
 
@@ -73,7 +75,7 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 14
                         font.weight: Font.Bold
-                        color: "#ffffff"
+                        color: root.themeConfig ? root.themeConfig.text : Theme.text
                     }
                 }
 
@@ -90,7 +92,7 @@ Item {
                         anchors.centerIn: parent
                         text: "✕"
                         font.pixelSize: 11
-                        color: Theme.textMuted
+                        color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                     }
                 }
             }
@@ -107,10 +109,12 @@ Item {
                     height: 60
                     cornerRadius: Theme.cardRadius
                     active: root.networkService ? root.networkService.isWifiEnabled : true
-                    activeColor: Theme.surfaceCard
-                    activeBorderColor: root.networkService && root.networkService.isConnected ? Qt.rgba(204/255, 255/255, 0/255, 0.35) : Theme.glassBorderSubtle
-                    defaultBg: Theme.surfaceCard
-                    hoverBg: Theme.surfaceCardHover
+                    activeColor: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                    activeBorderColor: root.networkService && root.networkService.isConnected 
+                        ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                        : (root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle)
+                    defaultBg: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                    hoverBg: root.themeConfig ? root.themeConfig.surfaceCardHover : Theme.surfaceCardHover
                     onClicked: {
                         if (root.networkService) root.networkService.toggleWifi();
                     }
@@ -124,16 +128,22 @@ Item {
                             width: 36
                             height: 36
                             radius: 18
-                            color: root.networkService && root.networkService.isConnected ? Qt.rgba(204/255, 255/255, 0/255, 0.18) : Qt.rgba(255, 255, 255, 0.08)
+                            color: root.networkService && root.networkService.isConnected 
+                                ? (root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft) 
+                                : Qt.rgba(255, 255, 255, 0.08)
                             border.width: 1
-                            border.color: root.networkService && root.networkService.isConnected ? Theme.accentGlow : Theme.glassBorderSubtle
+                            border.color: root.networkService && root.networkService.isConnected 
+                                ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                                : (root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle)
                             anchors.verticalCenter: parent.verticalCenter
 
                             Text {
                                 anchors.centerIn: parent
                                 text: "󰤨"
                                 font.pixelSize: 16
-                                color: root.networkService && root.networkService.isConnected ? Theme.accent : Theme.textMuted
+                                color: root.networkService && root.networkService.isConnected 
+                                    ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                                    : (root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted)
                             }
                         }
 
@@ -147,13 +157,13 @@ Item {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 12
                                 font.weight: Font.Bold
-                                color: "#ffffff"
+                                color: root.themeConfig ? root.themeConfig.text : Theme.text
                             }
                             Text {
                                 text: root.networkService && root.networkService.isConnected ? root.networkService.activeSsid : "Disconnected"
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 10
-                                color: Theme.textMuted
+                                color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                                 elide: Text.ElideRight
                                 width: parent.width
                             }
@@ -169,10 +179,12 @@ Item {
                     height: 60
                     cornerRadius: Theme.cardRadius
                     active: btEnabled
-                    activeColor: Theme.surfaceCard
-                    activeBorderColor: btEnabled ? Qt.rgba(204/255, 255/255, 0/255, 0.35) : Theme.glassBorderSubtle
-                    defaultBg: Theme.surfaceCard
-                    hoverBg: Theme.surfaceCardHover
+                    activeColor: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                    activeBorderColor: btEnabled 
+                        ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                        : (root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle)
+                    defaultBg: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                    hoverBg: root.themeConfig ? root.themeConfig.surfaceCardHover : Theme.surfaceCardHover
                     onClicked: {
                         btEnabled = !btEnabled;
                         btProc.command = ["bluetoothctl", "power", btEnabled ? "on" : "off"];
@@ -189,16 +201,22 @@ Item {
                             width: 36
                             height: 36
                             radius: 18
-                            color: btCard.btEnabled ? Qt.rgba(204/255, 255/255, 0/255, 0.18) : Qt.rgba(255, 255, 255, 0.08)
+                            color: btCard.btEnabled 
+                                ? (root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft) 
+                                : Qt.rgba(255, 255, 255, 0.08)
                             border.width: 1
-                            border.color: btCard.btEnabled ? Theme.accentGlow : Theme.glassBorderSubtle
+                            border.color: btCard.btEnabled 
+                                ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                                : (root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle)
                             anchors.verticalCenter: parent.verticalCenter
 
                             Text {
                                 anchors.centerIn: parent
                                 text: "󰂯"
                                 font.pixelSize: 16
-                                color: btCard.btEnabled ? Theme.accent : Theme.textMuted
+                                color: btCard.btEnabled 
+                                    ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                                    : (root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted)
                             }
                         }
 
@@ -212,13 +230,13 @@ Item {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 12
                                 font.weight: Font.Bold
-                                color: "#ffffff"
+                                color: root.themeConfig ? root.themeConfig.text : Theme.text
                             }
                             Text {
                                 text: btCard.btEnabled ? "Enabled" : "Disabled"
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 10
-                                color: Theme.textMuted
+                                color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                             }
                         }
                     }
@@ -237,9 +255,9 @@ Item {
                     width: parent.width
                     height: 60
                     radius: Theme.cardRadius
-                    color: Theme.surfaceCard
+                    color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                     border.width: 1
-                    border.color: Theme.glassBorderSubtle
+                    border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                     Column {
                         anchors.fill: parent
@@ -257,7 +275,7 @@ Item {
                                 Text {
                                     text: root.audioService && root.audioService.muted ? "󰝟" : "󰕾"
                                     font.pixelSize: 12
-                                    color: Theme.textMuted
+                                    color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                                 Text {
@@ -265,7 +283,7 @@ Item {
                                     font.family: Theme.fontFamily
                                     font.pixelSize: 11
                                     font.weight: Font.DemiBold
-                                    color: "#ffffff"
+                                    color: root.themeConfig ? root.themeConfig.text : Theme.text
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                             }
@@ -277,12 +295,14 @@ Item {
                                 font.family: Theme.monoFontFamily
                                 font.pixelSize: 11
                                 font.weight: Font.Bold
-                                color: Theme.accent
+                                color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                             }
                         }
 
                         Slider {
                             width: parent.width
+                            trackColor: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                            progressColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
                             value: root.audioService ? root.audioService.volume : 0.5
                             onMoved: function(val) {
                                 if (root.audioService) root.audioService.setVolume(val);
@@ -297,9 +317,9 @@ Item {
                     width: parent.width
                     height: 60
                     radius: Theme.cardRadius
-                    color: Theme.surfaceCard
+                    color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                     border.width: 1
-                    border.color: Theme.glassBorderSubtle
+                    border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                     Column {
                         anchors.fill: parent
@@ -317,7 +337,7 @@ Item {
                                 Text {
                                     text: "󰃠"
                                     font.pixelSize: 12
-                                    color: Theme.textMuted
+                                    color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                                 Text {
@@ -325,7 +345,7 @@ Item {
                                     font.family: Theme.fontFamily
                                     font.pixelSize: 11
                                     font.weight: Font.DemiBold
-                                    color: "#ffffff"
+                                    color: root.themeConfig ? root.themeConfig.text : Theme.text
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                             }
@@ -337,12 +357,14 @@ Item {
                                 font.family: Theme.monoFontFamily
                                 font.pixelSize: 11
                                 font.weight: Font.Bold
-                                color: Theme.accent
+                                color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                             }
                         }
 
                         Slider {
                             width: parent.width
+                            trackColor: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                            progressColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
                             value: root.brightnessService ? (root.brightnessService.percentage / 100.0) : 1.0
                             onMoved: function(val) {
                                 if (root.brightnessService) root.brightnessService.setBrightness(Math.round(val * 100));
@@ -357,9 +379,9 @@ Item {
                 width: parent.width
                 height: 44
                 radius: Theme.cardRadius
-                color: Theme.surfaceCard
+                color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                 border.width: 1
-                border.color: Theme.glassBorderSubtle
+                border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                 Row {
                     anchors.centerIn: parent
@@ -367,21 +389,21 @@ Item {
 
                     Row {
                         spacing: 5
-                        Text { text: "◉"; font.pixelSize: 10; color: Theme.accent; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: "CPU " + (root.systemData ? root.systemData.cpuUsage : 0) + "%"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: "#ffffff" }
+                        Text { text: "◉"; font.pixelSize: 10; color: root.themeConfig ? root.themeConfig.accent : Theme.accent; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "CPU " + (root.systemData ? root.systemData.cpuUsage : 0) + "%"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: root.themeConfig ? root.themeConfig.text : Theme.text }
                     }
 
                     Row {
                         spacing: 5
-                        Text { text: "◉"; font.pixelSize: 10; color: Theme.accent; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: "RAM " + (root.systemData ? root.systemData.ramUsage : 0) + "%"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: "#ffffff" }
+                        Text { text: "◉"; font.pixelSize: 10; color: root.themeConfig ? root.themeConfig.accent : Theme.accent; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "RAM " + (root.systemData ? root.systemData.ramUsage : 0) + "%"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: root.themeConfig ? root.themeConfig.text : Theme.text }
                     }
 
                     Row {
                         visible: root.systemData && root.systemData.hasTemp && root.systemData.tempCelsius > 0
                         spacing: 5
-                        Text { text: "◉"; font.pixelSize: 10; color: Theme.accent; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: (root.systemData ? root.systemData.tempCelsius : 0) + "°C"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: "#ffffff" }
+                        Text { text: "◉"; font.pixelSize: 10; color: root.themeConfig ? root.themeConfig.accent : Theme.accent; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: (root.systemData ? root.systemData.tempCelsius : 0) + "°C"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: root.themeConfig ? root.themeConfig.text : Theme.text }
                     }
                 }
             }
@@ -402,15 +424,15 @@ Item {
                         width: (parent.width - 24) / 4
                         height: 40
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Theme.surfaceCard
-                        hoverBg: Theme.surfaceCardHover
+                        defaultBg: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceCardHover : Theme.surfaceCardHover
                         onClicked: {
                             lockProc.command = ["hyprlock"];
                             lockProc.running = false;
                             lockProc.running = true;
                             root.closeRequested();
                         }
-                        Text { anchors.centerIn: parent; text: "󰌾"; font.pixelSize: 15; color: "#ffffff" }
+                        Text { anchors.centerIn: parent; text: "󰌾"; font.pixelSize: 15; color: root.themeConfig ? root.themeConfig.text : Theme.text }
                     }
 
                     // Logout
@@ -418,10 +440,10 @@ Item {
                         width: (parent.width - 24) / 4
                         height: 40
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Theme.surfaceCard
-                        hoverBg: Theme.surfaceCardHover
+                        defaultBg: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceCardHover : Theme.surfaceCardHover
                         onClicked: root.confirmAction = "logout"
-                        Text { anchors.centerIn: parent; text: "󰍃"; font.pixelSize: 15; color: "#ffffff" }
+                        Text { anchors.centerIn: parent; text: "󰍃"; font.pixelSize: 15; color: root.themeConfig ? root.themeConfig.text : Theme.text }
                     }
 
                     // Restart
@@ -429,10 +451,10 @@ Item {
                         width: (parent.width - 24) / 4
                         height: 40
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Theme.surfaceCard
-                        hoverBg: Theme.surfaceCardHover
+                        defaultBg: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceCardHover : Theme.surfaceCardHover
                         onClicked: root.confirmAction = "restart"
-                        Text { anchors.centerIn: parent; text: "󰑐"; font.pixelSize: 15; color: "#ffffff" }
+                        Text { anchors.centerIn: parent; text: "󰑐"; font.pixelSize: 15; color: root.themeConfig ? root.themeConfig.text : Theme.text }
                     }
 
                     // Shutdown
@@ -440,11 +462,11 @@ Item {
                         width: (parent.width - 24) / 4
                         height: 40
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Qt.rgba(255/255, 85/255, 85/255, 0.16)
-                        hoverBg: Qt.rgba(255/255, 85/255, 85/255, 0.28)
-                        activeBorderColor: "#ff5555"
+                        defaultBg: Qt.rgba(248/255, 113/255, 113/255, 0.16)
+                        hoverBg: Qt.rgba(248/255, 113/255, 113/255, 0.28)
+                        activeBorderColor: root.themeConfig ? root.themeConfig.danger : Theme.danger
                         onClicked: root.confirmAction = "shutdown"
-                        Text { anchors.centerIn: parent; text: "󰐥"; font.pixelSize: 15; color: "#ff5555" }
+                        Text { anchors.centerIn: parent; text: "󰐥"; font.pixelSize: 15; color: root.themeConfig ? root.themeConfig.danger : Theme.danger }
                     }
                 }
 
@@ -460,7 +482,7 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 12
                         font.weight: Font.Bold
-                        color: "#ffffff"
+                        color: root.themeConfig ? root.themeConfig.text : Theme.text
                         width: 140
                     }
 
@@ -468,8 +490,8 @@ Item {
                         width: 90
                         height: 36
                         cornerRadius: Theme.smallRadius
-                        defaultBg: "#ff5555"
-                        hoverBg: "#ff7777"
+                        defaultBg: root.themeConfig ? root.themeConfig.danger : Theme.danger
+                        hoverBg: Qt.lighter(root.themeConfig ? root.themeConfig.danger : Theme.danger, 1.15)
                         onClicked: {
                             if (root.confirmAction === "logout") {
                                 powerProc.command = ["hyprctl", "dispatch", "exit"];
@@ -489,10 +511,10 @@ Item {
                         width: 70
                         height: 36
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Theme.surface
-                        hoverBg: Theme.surfaceHover
+                        defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                         onClicked: root.confirmAction = ""
-                        Text { anchors.centerIn: parent; text: "Cancel"; font.pixelSize: 11; color: Theme.textMuted }
+                        Text { anchors.centerIn: parent; text: "Cancel"; font.pixelSize: 11; color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted }
                     }
                 }
             }

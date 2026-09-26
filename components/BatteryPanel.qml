@@ -4,6 +4,7 @@ import "../Theme.js" as Theme
 Item {
     id: root
 
+    property var themeConfig: null
     required property var batteryService
     property bool isOpen: false
 
@@ -18,13 +19,14 @@ Item {
     scale: isOpen ? 1.0 : 0.97
     y: isOpen ? 0 : -8
 
-    Behavior on opacity { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on scale { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on y { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
+    Behavior on opacity { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on scale { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on y { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
 
     GlassSurface {
         anchors.fill: parent
         level: 2
+        elevation: 2
         clip: true
 
         Column {
@@ -45,7 +47,9 @@ Item {
                     Text {
                         text: root.batteryService && root.batteryService.isCharging ? "󰂄" : "󰁹"
                         font.pixelSize: 15
-                        color: root.batteryService && root.batteryService.isCharging ? Theme.accent : Theme.text
+                        color: root.batteryService && root.batteryService.isCharging 
+                            ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                            : (root.themeConfig ? root.themeConfig.text : Theme.text)
                     }
 
                     Text {
@@ -53,7 +57,7 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 14
                         font.weight: Font.Bold
-                        color: Theme.text
+                        color: root.themeConfig ? root.themeConfig.text : Theme.text
                     }
                 }
 
@@ -63,14 +67,14 @@ Item {
                     width: 24
                     height: 24
                     cornerRadius: Theme.smallRadius
-                    defaultBg: Theme.surface
-                    hoverBg: Theme.surfaceHover
+                    defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                    hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                     onClicked: root.closeRequested()
                     Text {
                         anchors.centerIn: parent
                         text: "✕"
                         font.pixelSize: 10
-                        color: Theme.textMuted
+                        color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                     }
                 }
             }
@@ -80,35 +84,39 @@ Item {
                 width: parent.width
                 height: 76
                 radius: Theme.cardRadius
-                color: Theme.surfaceCard
+                color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                 border.width: 1
-                border.color: Theme.glassBorderSubtle
+                border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                 Column {
                     anchors.fill: parent
                     anchors.margins: 12
                     spacing: 10
 
-                    Row {
+                    Item {
                         width: parent.width
+                        height: 20
 
                         Text {
+                            anchors.left: parent.left
+                            anchors.verticalCenter: parent.verticalCenter
                             text: root.batteryService ? root.batteryService.status : "Discharging"
                             font.family: Theme.fontFamily
                             font.pixelSize: 12
                             font.weight: Font.Medium
-                            color: Theme.text
+                            color: root.themeConfig ? root.themeConfig.text : Theme.text
                         }
-
-                        Item { width: 1; height: 1 }
 
                         Text {
                             anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
                             text: (root.batteryService ? root.batteryService.percentage : 100) + "%"
                             font.family: Theme.monoFontFamily
                             font.pixelSize: 14
                             font.weight: Font.Bold
-                            color: root.batteryService && root.batteryService.isCharging ? Theme.accent : Theme.text
+                            color: root.batteryService && root.batteryService.isCharging 
+                                ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                                : (root.themeConfig ? root.themeConfig.text : Theme.text)
                         }
                     }
 
@@ -117,9 +125,9 @@ Item {
                         width: parent.width
                         height: 6
                         radius: 3
-                        color: Theme.surface
+                        color: root.themeConfig ? root.themeConfig.surface : Theme.surface
                         border.width: 1
-                        border.color: Theme.glassBorderSubtle
+                        border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                         Rectangle {
                             height: parent.height
@@ -127,10 +135,10 @@ Item {
                             radius: 3
                             color: {
                                 var p = root.batteryService ? root.batteryService.percentage : 100;
-                                if (root.batteryService && root.batteryService.isCharging) return Theme.accent;
-                                if (p <= 20) return "#ff5555";
-                                if (p <= 40) return "#ffb86c";
-                                return Theme.accent;
+                                if (root.batteryService && root.batteryService.isCharging) return root.themeConfig ? root.themeConfig.accent : Theme.accent;
+                                if (p <= 20) return root.themeConfig ? root.themeConfig.danger : Theme.danger;
+                                if (p <= 40) return root.themeConfig ? root.themeConfig.warning : Theme.warning;
+                                return root.themeConfig ? root.themeConfig.accent : Theme.accent;
                             }
                             Behavior on width { NumberAnimation { duration: Theme.animNormal; easing.type: Easing.OutCubic } }
                         }

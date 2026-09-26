@@ -5,6 +5,7 @@ import "../Theme.js" as Theme
 Item {
     id: root
 
+    property var themeConfig: null
     property string timeString: ""
     property string dateString: ""
 
@@ -40,16 +41,20 @@ Item {
         }
     }
 
-    // Subtle integrated glass chip
+    // Integrated subtle glass chip
     Rectangle {
         id: clockPill
         anchors.centerIn: parent
         implicitWidth: timeLabel.implicitWidth + 20
         height: 26
         radius: height / 2
-        color: clockMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.08) : Qt.rgba(255, 255, 255, 0.04)
+        color: clockMouse.containsMouse 
+            ? Qt.rgba(255, 255, 255, 0.08) 
+            : Qt.rgba(0, 0, 0, 0.22)
         border.width: 1
-        border.color: clockMouse.containsMouse ? Theme.glassBorder : Theme.glassBorderSubtle
+        border.color: clockMouse.containsMouse 
+            ? (root.themeConfig ? root.themeConfig.borderStrong : Theme.glassBorder) 
+            : (root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle)
 
         Behavior on color { ColorAnimation { duration: Theme.animMicro } }
         Behavior on border.color { ColorAnimation { duration: Theme.animMicro } }
@@ -62,7 +67,9 @@ Item {
             font.pixelSize: 12
             font.weight: Font.Bold
             font.letterSpacing: 0.5
-            color: "#ffffff"
+            color: root.themeConfig ? root.themeConfig.text : Theme.text
+
+            Behavior on color { ColorAnimation { duration: Theme.animMicro } }
         }
 
         MouseArea {

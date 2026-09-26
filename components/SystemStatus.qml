@@ -18,14 +18,14 @@ Row {
 
     spacing: 6
 
-    // Integrated Status Cluster
+    // Integrated Status Cluster Pill
     Rectangle {
         height: 28
         width: clusterRow.implicitWidth + 8
         radius: Theme.smallRadius
-        color: Qt.rgba(0, 0, 0, 0.25)
+        color: Qt.rgba(0, 0, 0, 0.28)
         border.width: 1
-        border.color: Theme.glassBorder
+        border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
         Row {
             id: clusterRow
@@ -42,7 +42,9 @@ Row {
                 Rectangle {
                     anchors.fill: parent
                     radius: 6
-                    color: wifiMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.12) : (root.networkService && root.networkService.isConnected ? Qt.rgba(255, 255, 255, 0.04) : "transparent")
+                    color: wifiMouse.containsMouse 
+                        ? Qt.rgba(255, 255, 255, 0.12) 
+                        : (root.networkService && root.networkService.isConnected ? Qt.rgba(255, 255, 255, 0.04) : "transparent")
                     Behavior on color { ColorAnimation { duration: Theme.animMicro } }
                 }
 
@@ -50,7 +52,9 @@ Row {
                     anchors.centerIn: parent
                     text: root.networkService && root.networkService.isConnected ? "󰤨" : "󰤭"
                     font.pixelSize: 13
-                    color: root.networkService && root.networkService.isConnected ? "#ffffff" : Theme.textMuted
+                    color: root.networkService && root.networkService.isConnected 
+                        ? (root.themeConfig ? root.themeConfig.text : Theme.text) 
+                        : (root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted)
                 }
 
                 MouseArea {
@@ -86,7 +90,9 @@ Row {
                         return "󰕿";
                     }
                     font.pixelSize: 13
-                    color: root.audioService && !root.audioService.muted ? "#ffffff" : Theme.textMuted
+                    color: root.audioService && !root.audioService.muted 
+                        ? (root.themeConfig ? root.themeConfig.text : Theme.text) 
+                        : (root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted)
                 }
 
                 MouseArea {
@@ -122,10 +128,10 @@ Row {
                         text: root.batteryService && root.batteryService.isCharging ? "󰂄" : "󰁹"
                         font.pixelSize: 12
                         color: {
-                            if (!root.batteryService) return Theme.textMuted;
-                            if (root.batteryService.isCharging) return root.themeConfig ? root.themeConfig.accentColor : Theme.accent;
-                            if (root.batteryService.percentage <= 20) return "#ff5555";
-                            return "#ffffff";
+                            if (!root.batteryService) return root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted;
+                            if (root.batteryService.isCharging) return root.themeConfig ? root.themeConfig.accent : Theme.accent;
+                            if (root.batteryService.percentage <= 20) return root.themeConfig ? root.themeConfig.danger : Theme.danger;
+                            return root.themeConfig ? root.themeConfig.text : Theme.text;
                         }
                     }
 
@@ -135,7 +141,7 @@ Row {
                         font.family: Theme.monoFontFamily
                         font.pixelSize: 11
                         font.weight: Font.Bold
-                        color: "#ffffff"
+                        color: root.themeConfig ? root.themeConfig.text : Theme.text
                     }
                 }
 
@@ -165,7 +171,9 @@ Row {
                     anchors.centerIn: parent
                     text: "󰂚"
                     font.pixelSize: 13
-                    color: "#ffffff"
+                    color: notifMouse.containsMouse 
+                        ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                        : (root.themeConfig ? root.themeConfig.text : Theme.text)
                 }
 
                 MouseArea {
@@ -188,8 +196,8 @@ Row {
         cornerRadius: Theme.smallRadius
         defaultBg: Qt.rgba(255, 255, 255, 0.08)
         hoverBg: Qt.rgba(255, 255, 255, 0.16)
-        activeColor: Qt.rgba(204/255, 255/255, 0/255, 0.22)
-        activeBorderColor: root.themeConfig ? root.themeConfig.accentColor : Theme.accent
+        activeColor: root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft
+        activeBorderColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
         onClicked: root.toggleControlCenter()
 
         Row {
@@ -201,7 +209,9 @@ Row {
                 font.family: Theme.fontFamily
                 font.pixelSize: 12
                 font.weight: Font.Black
-                color: wolfiiBtn.hovered ? (root.themeConfig ? root.themeConfig.accentColor : Theme.accent) : "#ffffff"
+                color: wolfiiBtn.hovered 
+                    ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                    : (root.themeConfig ? root.themeConfig.text : Theme.text)
                 Behavior on color { ColorAnimation { duration: Theme.animMicro } }
             }
 
@@ -209,7 +219,7 @@ Row {
                 width: 4
                 height: 4
                 radius: 2
-                color: root.themeConfig ? root.themeConfig.accentColor : Theme.accent
+                color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: 3
             }

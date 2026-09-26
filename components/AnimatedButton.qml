@@ -31,13 +31,18 @@ Item {
         id: bgRect
         anchors.fill: parent
         radius: root.cornerRadius
-        color: root.active 
-            ? root.activeColor 
-            : (root.pressed ? Theme.surfaceActive : (root.hovered ? root.hoverBg : root.defaultBg))
+        color: {
+            if (root.active) return root.activeColor ? root.activeColor : Theme.accentSoft;
+            if (root.pressed) return Theme.surfaceActive;
+            if (root.hovered) return root.hoverBg ? root.hoverBg : Theme.surfaceHover;
+            return root.defaultBg ? root.defaultBg : Theme.surface;
+        }
         border.width: 1
-        border.color: root.active 
-            ? root.activeBorderColor 
-            : (root.hovered ? Theme.glassBorderStrong : Theme.glassBorderSubtle)
+        border.color: {
+            if (root.active) return root.activeBorderColor ? root.activeBorderColor : Theme.accentGlow;
+            if (root.hovered) return Theme.glassBorderStrong;
+            return Theme.glassBorderSubtle;
+        }
 
         Behavior on color {
             ColorAnimation {

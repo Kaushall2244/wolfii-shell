@@ -6,6 +6,7 @@ import "../Theme.js" as Theme
 Item {
     id: root
 
+    property var themeConfig: null
     property bool isOpen: false
     property string searchText: ""
     property int selectedIndex: 0
@@ -21,9 +22,9 @@ Item {
     scale: isOpen ? 1.0 : 0.96
     y: isOpen ? 0 : -16
 
-    Behavior on opacity { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on scale { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on y { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
+    Behavior on opacity { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on scale { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on y { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
 
     onIsOpenChanged: {
         if (isOpen) {
@@ -57,6 +58,7 @@ Item {
     GlassSurface {
         anchors.fill: parent
         level: 3
+        elevation: 3
         clip: true
 
         Column {
@@ -69,9 +71,11 @@ Item {
                 width: parent.width
                 height: 48
                 radius: Theme.cardRadius
-                color: Theme.surfaceCard
+                color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                 border.width: 1
-                border.color: searchInput.activeFocus ? Theme.accentGlow : Theme.glassBorderSubtle
+                border.color: searchInput.activeFocus 
+                    ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                    : (root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle)
 
                 Behavior on border.color { ColorAnimation { duration: Theme.animMicro } }
 
@@ -85,7 +89,9 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "󰍉"
                         font.pixelSize: 18
-                        color: searchInput.activeFocus ? Theme.accent : Theme.textMuted
+                        color: searchInput.activeFocus 
+                            ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                            : (root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted)
                     }
 
                     TextInput {
@@ -94,16 +100,16 @@ Item {
                         width: parent.width - 50
                         font.family: Theme.fontFamily
                         font.pixelSize: 14
-                        color: Theme.text
+                        color: root.themeConfig ? root.themeConfig.text : Theme.text
                         clip: true
-                        selectionColor: Theme.accentSoft
-                        selectedTextColor: Theme.accent
+                        selectionColor: root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft
+                        selectedTextColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
 
                         Text {
                             text: "Type to search applications..."
                             font.family: Theme.fontFamily
                             font.pixelSize: 14
-                            color: Theme.textDim
+                            color: root.themeConfig ? root.themeConfig.textSubtle : Theme.textSubtle
                             visible: !searchInput.text && !searchInput.activeFocus
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -155,10 +161,14 @@ Item {
                     width: appListView.width
                     height: 50
                     cornerRadius: Theme.smallRadius
-                    defaultBg: root.selectedIndex === index ? Theme.accentSoft : "transparent"
-                    hoverBg: root.selectedIndex === index ? Qt.rgba(204/255, 255/255, 0/255, 0.22) : Theme.surfaceHover
+                    defaultBg: root.selectedIndex === index 
+                        ? (root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft) 
+                        : "transparent"
+                    hoverBg: root.selectedIndex === index 
+                        ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                        : (root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover)
                     active: root.selectedIndex === index
-                    activeBorderColor: Theme.accentGlow
+                    activeBorderColor: root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow
 
                     onClicked: {
                         modelData.execute();
@@ -189,7 +199,9 @@ Item {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 13
                                 font.weight: root.selectedIndex === index ? Font.Bold : Font.DemiBold
-                                color: root.selectedIndex === index ? Theme.accent : Theme.text
+                                color: root.selectedIndex === index 
+                                    ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                                    : (root.themeConfig ? root.themeConfig.text : Theme.text)
                                 elide: Text.ElideRight
                                 width: parent.width
                             }
@@ -198,7 +210,7 @@ Item {
                                 text: modelData.comment || modelData.genericName || ""
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 10
-                                color: Theme.textMuted
+                                color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                                 elide: Text.ElideRight
                                 width: parent.width
                                 visible: text.length > 0

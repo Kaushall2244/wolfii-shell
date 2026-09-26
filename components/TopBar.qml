@@ -69,7 +69,7 @@ PanelWindow {
             anchors.topMargin: 2
             anchors.bottomMargin: -2
             radius: root.themeConfig ? root.themeConfig.cornerRadius : Theme.radius
-            color: "#66000000"
+            color: Theme.glassShadow
             z: 0
         }
 
@@ -83,6 +83,7 @@ PanelWindow {
             // Left Section: Workspaces (10 numbers, circular gliding indicator)
             Workspaces {
                 id: workspacesWidget
+                themeConfig: root.themeConfig
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
@@ -91,6 +92,7 @@ PanelWindow {
             // Center Section: Clock (03:19PM clean prominent text)
             Clock {
                 id: clockWidget
+                themeConfig: root.themeConfig
                 anchors.centerIn: parent
             }
 
@@ -104,6 +106,7 @@ PanelWindow {
                 // Outer Topbar System Stats: ◉ 11   ◉ 42   ◉ 48°
                 SystemStats {
                     id: statsWidget
+                    themeConfig: root.themeConfig
                     anchors.verticalCenter: parent.verticalCenter
                     systemData: root.systemData
                     visible: !root.themeConfig || root.themeConfig.showStats
@@ -115,7 +118,7 @@ PanelWindow {
                     width: 1
                     height: 16
                     anchors.verticalCenter: parent.verticalCenter
-                    color: Theme.glassBorderSubtle
+                    color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
                 }
 
                 // Wi-Fi, Audio, Battery, Wolfii identity pill

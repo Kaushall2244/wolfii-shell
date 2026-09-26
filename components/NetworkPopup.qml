@@ -4,6 +4,7 @@ import "../Theme.js" as Theme
 Item {
     id: root
 
+    property var themeConfig: null
     required property var networkService
     property bool isOpen: false
 
@@ -18,13 +19,14 @@ Item {
     scale: isOpen ? 1.0 : 0.97
     y: isOpen ? 0 : -8
 
-    Behavior on opacity { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on scale { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on y { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
+    Behavior on opacity { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on scale { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on y { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
 
     GlassSurface {
         anchors.fill: parent
         level: 2
+        elevation: 2
         clip: true
 
         Column {
@@ -45,7 +47,7 @@ Item {
                     Text {
                         text: "󰤨"
                         font.pixelSize: 15
-                        color: Theme.accent
+                        color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                     }
 
                     Text {
@@ -53,7 +55,7 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 15
                         font.weight: Font.Bold
-                        color: Theme.text
+                        color: root.themeConfig ? root.themeConfig.text : Theme.text
                     }
                 }
 
@@ -67,8 +69,8 @@ Item {
                         width: 28
                         height: 28
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Theme.surface
-                        hoverBg: Theme.surfaceHover
+                        defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                         onClicked: {
                             if (root.networkService) root.networkService.rescan();
                         }
@@ -76,7 +78,7 @@ Item {
                             anchors.centerIn: parent
                             text: "󰑐"
                             font.pixelSize: 13
-                            color: Theme.text
+                            color: root.themeConfig ? root.themeConfig.text : Theme.text
                         }
                     }
 
@@ -85,14 +87,14 @@ Item {
                         width: 28
                         height: 28
                         cornerRadius: Theme.smallRadius
-                        defaultBg: Theme.surface
-                        hoverBg: Theme.surfaceHover
+                        defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                         onClicked: root.closeRequested()
                         Text {
                             anchors.centerIn: parent
                             text: "✕"
                             font.pixelSize: 11
-                            color: Theme.textMuted
+                            color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                         }
                     }
                 }
@@ -103,67 +105,83 @@ Item {
                 width: parent.width
                 height: 56
                 radius: Theme.cardRadius
-                color: root.networkService && root.networkService.isConnected ? Theme.surfaceCard : Theme.surface
+                color: root.networkService && root.networkService.isConnected 
+                    ? (root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard) 
+                    : (root.themeConfig ? root.themeConfig.surface : Theme.surface)
                 border.width: 1
-                border.color: root.networkService && root.networkService.isConnected ? Theme.accentGlow : Theme.glassBorderSubtle
+                border.color: root.networkService && root.networkService.isConnected 
+                    ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                    : (root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle)
 
-                Row {
+                Item {
                     anchors.fill: parent
                     anchors.leftMargin: 12
                     anchors.rightMargin: 12
-                    spacing: 10
 
-                    Rectangle {
-                        width: 36
-                        height: 36
-                        radius: Theme.smallRadius
-                        color: root.networkService && root.networkService.isConnected ? Theme.accentSoft : Qt.rgba(255, 255, 255, 0.05)
+                    Row {
+                        anchors.left: parent.left
+                        anchors.right: statusBadge.visible ? statusBadge.left : parent.right
+                        anchors.rightMargin: 8
                         anchors.verticalCenter: parent.verticalCenter
+                        spacing: 10
 
-                        Text {
-                            anchors.centerIn: parent
-                            text: root.networkService && root.networkService.isConnected ? "󰤨" : "󰤭"
-                            font.pixelSize: 17
-                            color: root.networkService && root.networkService.isConnected ? Theme.accent : Theme.textMuted
-                        }
-                    }
+                        Rectangle {
+                            width: 36
+                            height: 36
+                            radius: Theme.smallRadius
+                            color: root.networkService && root.networkService.isConnected 
+                                ? (root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft) 
+                                : Qt.rgba(255, 255, 255, 0.05)
+                            anchors.verticalCenter: parent.verticalCenter
 
-                    Column {
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 2
-                        width: parent.width - 130
-
-                        Text {
-                            text: root.networkService && root.networkService.activeSsid ? root.networkService.activeSsid : "Not Connected"
-                            font.family: Theme.fontFamily
-                            font.pixelSize: 13
-                            font.weight: Font.Bold
-                            color: Theme.text
-                            elide: Text.ElideRight
-                            width: parent.width
+                            Text {
+                                anchors.centerIn: parent
+                                text: root.networkService && root.networkService.isConnected ? "󰤨" : "󰤭"
+                                font.pixelSize: 17
+                                color: root.networkService && root.networkService.isConnected 
+                                    ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                                    : (root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted)
+                            }
                         }
 
-                        Text {
-                            text: root.networkService && root.networkService.isConnected 
-                                ? "Signal " + root.networkService.activeSignal + "%" 
-                                : "Disconnected"
-                            font.family: Theme.fontFamily
-                            font.pixelSize: 11
-                            color: Theme.textMuted
+                        Column {
+                            anchors.verticalCenter: parent.verticalCenter
+                            spacing: 2
+                            width: parent.width - 46
+
+                            Text {
+                                text: root.networkService && root.networkService.activeSsid ? root.networkService.activeSsid : "Not Connected"
+                                font.family: Theme.fontFamily
+                                font.pixelSize: 13
+                                font.weight: Font.Bold
+                                color: root.themeConfig ? root.themeConfig.text : Theme.text
+                                elide: Text.ElideRight
+                                width: parent.width
+                            }
+
+                            Text {
+                                text: root.networkService && root.networkService.isConnected 
+                                    ? "Signal " + root.networkService.activeSignal + "%" 
+                                    : "Disconnected"
+                                font.family: Theme.fontFamily
+                                font.pixelSize: 11
+                                color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
+                            }
                         }
                     }
 
                     // Connected Status Badge
                     Rectangle {
+                        id: statusBadge
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         visible: root.networkService && root.networkService.isConnected
                         width: badgeRow.implicitWidth + 12
                         height: 22
                         radius: Theme.pillRadius
-                        color: Theme.accentSoft
+                        color: root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft
                         border.width: 1
-                        border.color: Theme.accentGlow
+                        border.color: root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow
 
                         Row {
                             id: badgeRow
@@ -174,7 +192,7 @@ Item {
                                 width: 5
                                 height: 5
                                 radius: 2.5
-                                color: Theme.accent
+                                color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                                 anchors.verticalCenter: parent.verticalCenter
                             }
 
@@ -183,7 +201,7 @@ Item {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 10
                                 font.weight: Font.Bold
-                                color: Theme.accent
+                                color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                         }
@@ -203,7 +221,7 @@ Item {
                     font.family: Theme.fontFamily
                     font.pixelSize: 11
                     font.weight: Font.DemiBold
-                    color: Theme.textMuted
+                    color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                 }
 
                 Text {
@@ -212,7 +230,7 @@ Item {
                     text: (root.networkService ? root.networkService.availableNetworks.length : 0) + " found"
                     font.family: Theme.monoFontFamily
                     font.pixelSize: 10
-                    color: Theme.textDim
+                    color: root.themeConfig ? root.themeConfig.textSubtle : Theme.textSubtle
                 }
             }
 
@@ -240,14 +258,14 @@ Item {
                             anchors.horizontalCenter: parent.horizontalCenter
                             text: "󰤮"
                             font.pixelSize: 26
-                            color: Theme.textDim
+                            color: root.themeConfig ? root.themeConfig.textSubtle : Theme.textSubtle
                         }
                         Text {
                             anchors.horizontalCenter: parent.horizontalCenter
                             text: "Scanning for networks..."
                             font.family: Theme.fontFamily
                             font.pixelSize: 12
-                            color: Theme.textMuted
+                            color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                         }
                     }
                 }
@@ -256,10 +274,14 @@ Item {
                     width: netList.width
                     height: 38
                     cornerRadius: Theme.smallRadius
-                    defaultBg: modelData.inUse ? Theme.accentSoft : Theme.surfaceCard
-                    hoverBg: modelData.inUse ? Qt.rgba(204/255, 255/255, 0/255, 0.22) : Theme.surfaceCardHover
+                    defaultBg: modelData.inUse 
+                        ? (root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft) 
+                        : (root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard)
+                    hoverBg: modelData.inUse 
+                        ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                        : (root.themeConfig ? root.themeConfig.surfaceCardHover : Theme.surfaceCardHover)
                     active: modelData.inUse
-                    activeBorderColor: Theme.accentGlow
+                    activeBorderColor: root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow
                     onClicked: {
                         if (root.networkService && !modelData.inUse) {
                             root.networkService.connectNetwork(modelData.ssid);
@@ -281,7 +303,9 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: "󰤨"
                                 font.pixelSize: 14
-                                color: modelData.inUse ? Theme.accent : Theme.textMuted
+                                color: modelData.inUse 
+                                    ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                                    : (root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted)
                             }
 
                             Text {
@@ -290,7 +314,7 @@ Item {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 12
                                 font.weight: modelData.inUse ? Font.Bold : Font.Normal
-                                color: Theme.text
+                                color: root.themeConfig ? root.themeConfig.text : Theme.text
                                 elide: Text.ElideRight
                                 width: parent.width - 30
                             }
@@ -302,7 +326,9 @@ Item {
                             text: modelData.signal + "%"
                             font.family: Theme.monoFontFamily
                             font.pixelSize: 11
-                            color: modelData.inUse ? Theme.accent : Theme.textMuted
+                            color: modelData.inUse 
+                                ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) 
+                                : (root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted)
                         }
                     }
                 }

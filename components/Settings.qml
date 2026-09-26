@@ -33,6 +33,7 @@ Item {
     GlassSurface {
         anchors.fill: parent
         level: 3
+        elevation: 3
         clip: true
 
         // Main Layout: Left Sidebar + Right Content Area
@@ -223,45 +224,149 @@ Item {
                         Column {
                             visible: root.activeCategory === "Appearance"
                             width: parent.width
-                            spacing: 14
+                            spacing: 12
+
+                            // 1. Wallpaper Dynamic Palette Card
+                            Rectangle {
+                                width: parent.width
+                                height: 68
+                                radius: Theme.cardRadius
+                                color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                                border.width: 1
+                                border.color: root.themeConfig && root.themeConfig.wallpaperAware 
+                                    ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) 
+                                    : (root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle)
+
+                                Item {
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 16
+                                    anchors.rightMargin: 16
+
+                                    Column {
+                                        anchors.left: parent.left
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        spacing: 2
+
+                                        Row {
+                                            spacing: 6
+                                            Text {
+                                                text: "󰸉"
+                                                font.pixelSize: 14
+                                                color: root.themeConfig ? root.themeConfig.accent : Theme.accent
+                                                anchors.verticalCenter: parent.verticalCenter
+                                            }
+                                            Text {
+                                                text: "Wallpaper Adaptive Theme"
+                                                font.family: Theme.fontFamily
+                                                font.pixelSize: 12
+                                                font.weight: Font.Bold
+                                                color: root.themeConfig ? root.themeConfig.text : Theme.text
+                                                anchors.verticalCenter: parent.verticalCenter
+                                            }
+                                        }
+
+                                        Text {
+                                            text: root.themeConfig && root.themeConfig.wallpaperAware 
+                                                ? "Active • Dynamically extracted from current wallpaper" 
+                                                : "Manual override active"
+                                            font.family: Theme.fontFamily
+                                            font.pixelSize: 10
+                                            color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
+                                        }
+                                    }
+
+                                    Row {
+                                        anchors.right: parent.right
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        spacing: 8
+
+                                        // Resync button
+                                        AnimatedButton {
+                                            width: 80
+                                            height: 28
+                                            cornerRadius: Theme.smallRadius
+                                            defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                                            hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
+                                            visible: root.themeConfig && root.themeConfig.wallpaperAware
+                                            onClicked: {
+                                                if (root.themeConfig) root.themeConfig.reloadFromColorsJson();
+                                            }
+                                            Text {
+                                                anchors.centerIn: parent
+                                                text: "Resync"
+                                                font.family: Theme.fontFamily
+                                                font.pixelSize: 11
+                                                font.weight: Font.DemiBold
+                                                color: root.themeConfig ? root.themeConfig.accent : Theme.accent
+                                            }
+                                        }
+
+                                        // Toggle Switch
+                                        AnimatedButton {
+                                            width: 44
+                                            height: 24
+                                            cornerRadius: 12
+                                            readonly property bool isChecked: root.themeConfig && root.themeConfig.wallpaperAware
+                                            defaultBg: isChecked ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) : (root.themeConfig ? root.themeConfig.surface : Theme.surface)
+                                            hoverBg: isChecked ? (root.themeConfig ? root.themeConfig.accent : Theme.accent) : (root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover)
+                                            onClicked: {
+                                                if (root.themeConfig) {
+                                                    root.themeConfig.setWallpaperAware(!root.themeConfig.wallpaperAware);
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                width: 18
+                                                height: 18
+                                                radius: 9
+                                                color: parent.isChecked ? "#111116" : Theme.textMuted
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                x: parent.isChecked ? parent.width - width - 3 : 3
+                                                Behavior on x { NumberAnimation { duration: Theme.animMicro; easing.type: Easing.OutCubic } }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
                             Text {
-                                text: "Theme & Accent Color"
+                                text: "Preset Accents & Palette Overrides"
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 13
                                 font.weight: Font.Bold
-                                color: Theme.text
+                                color: root.themeConfig ? root.themeConfig.text : Theme.text
                             }
 
                             // Accent Color Swatches
                             Rectangle {
                                 width: parent.width
-                                height: 70
+                                height: 72
                                 radius: Theme.cardRadius
-                                color: Theme.surfaceCard
+                                color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                                 border.width: 1
-                                border.color: Theme.glassBorderSubtle
+                                border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                                 Row {
                                     anchors.centerIn: parent
-                                    spacing: 16
+                                    spacing: 14
 
                                     Repeater {
                                         model: [
-                                            { name: "Wolfii Lime", hex: "#ccff00" },
-                                            { name: "Cyan", hex: "#00e5ff" },
+                                            { name: "Honey Amber", hex: "#f2bd6e" },
+                                            { name: "Wolfii Lime", hex: "#b8e600" },
+                                            { name: "Ocean Cyan", hex: "#00e5ff" },
                                             { name: "Neon Violet", hex: "#b388ff" },
                                             { name: "Sunset Coral", hex: "#ff5252" },
                                             { name: "Pure White", hex: "#f8f8fc" }
                                         ]
 
                                         AnimatedButton {
-                                            width: 40
-                                            height: 40
-                                            cornerRadius: 20
+                                            width: 42
+                                            height: 42
+                                            cornerRadius: 21
                                             defaultBg: modelData.hex
                                             hoverBg: modelData.hex
-                                            active: root.themeConfig && root.themeConfig.accentColor === modelData.hex
+                                            active: root.themeConfig && (!root.themeConfig.wallpaperAware) && (root.themeConfig.accent === modelData.hex)
                                             activeBorderColor: "#ffffff"
                                             onClicked: {
                                                 if (root.themeConfig) root.themeConfig.setAccent(modelData.hex);
@@ -273,7 +378,7 @@ Item {
                                                 height: 10
                                                 radius: 5
                                                 color: "#111116"
-                                                visible: root.themeConfig && root.themeConfig.accentColor === modelData.hex
+                                                visible: root.themeConfig && (!root.themeConfig.wallpaperAware) && (root.themeConfig.accent === modelData.hex)
                                             }
                                         }
                                     }
@@ -281,11 +386,58 @@ Item {
                             }
 
                             Text {
-                                text: "Liquid Glass Geometry"
+                                text: "Liquid Glass Surfaces & Opacity"
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 13
                                 font.weight: Font.Bold
-                                color: Theme.text
+                                color: root.themeConfig ? root.themeConfig.text : Theme.text
+                            }
+
+                            // Glass Opacity Adjuster
+                            Rectangle {
+                                width: parent.width
+                                height: 68
+                                radius: Theme.cardRadius
+                                color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
+                                border.width: 1
+                                border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
+
+                                Column {
+                                    anchors.fill: parent
+                                    anchors.margins: 14
+                                    spacing: 6
+
+                                    Item {
+                                        width: parent.width
+                                        height: 16
+                                        Text {
+                                            anchors.left: parent.left
+                                            text: "Controlled Glass Density"
+                                            font.family: Theme.fontFamily
+                                            font.pixelSize: 12
+                                            color: root.themeConfig ? root.themeConfig.text : Theme.text
+                                        }
+                                        Text {
+                                            anchors.right: parent.right
+                                            text: (root.themeConfig ? Math.round(root.themeConfig.glassOpacity * 100) : 92) + "% Opaque"
+                                            font.family: Theme.monoFontFamily
+                                            font.pixelSize: 11
+                                            color: root.themeConfig ? root.themeConfig.accent : Theme.accent
+                                        }
+                                    }
+
+                                    Slider {
+                                        width: parent.width
+                                        minimumValue: 0.80
+                                        maximumValue: 0.98
+                                        trackColor: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                                        progressColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
+                                        value: root.themeConfig ? root.themeConfig.glassOpacity : 0.92
+                                        onMoved: function(val) {
+                                            if (root.themeConfig) root.themeConfig.glassOpacity = val;
+                                        }
+                                    }
+                                }
                             }
 
                             // Corner Radius Adjuster
@@ -293,9 +445,9 @@ Item {
                                 width: parent.width
                                 height: 68
                                 radius: Theme.cardRadius
-                                color: Theme.surfaceCard
+                                color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                                 border.width: 1
-                                border.color: Theme.glassBorderSubtle
+                                border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                                 Column {
                                     anchors.fill: parent
@@ -310,14 +462,14 @@ Item {
                                             text: "Corner Radius"
                                             font.family: Theme.fontFamily
                                             font.pixelSize: 12
-                                            color: Theme.text
+                                            color: root.themeConfig ? root.themeConfig.text : Theme.text
                                         }
                                         Text {
                                             anchors.right: parent.right
                                             text: (root.themeConfig ? Math.round(root.themeConfig.cornerRadius) : 16) + "px"
                                             font.family: Theme.monoFontFamily
                                             font.pixelSize: 11
-                                            color: root.themeConfig ? root.themeConfig.accentColor : Theme.accent
+                                            color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                                         }
                                     }
 
@@ -325,6 +477,8 @@ Item {
                                         width: parent.width
                                         minimumValue: 8
                                         maximumValue: 24
+                                        trackColor: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                                        progressColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
                                         value: root.themeConfig ? root.themeConfig.cornerRadius : 16
                                         onMoved: function(val) {
                                             if (root.themeConfig) root.themeConfig.cornerRadius = Math.round(val);
@@ -450,10 +604,10 @@ Item {
                                         readonly property bool isSelected: (modelData === "Normal" && root.themeConfig && root.themeConfig.animSpeedFactor === 1.0) ||
                                                                            (modelData === "Fast" && root.themeConfig && root.themeConfig.animSpeedFactor < 0.9 && root.themeConfig.animSpeedFactor > 0.1) ||
                                                                            (modelData === "Reduced" && root.themeConfig && root.themeConfig.animSpeedFactor < 0.1)
-                                        defaultBg: isSelected ? Qt.rgba(204/255, 255/255, 0/255, 0.14) : Theme.surfaceCard
-                                        hoverBg: isSelected ? Qt.rgba(204/255, 255/255, 0/255, 0.22) : Theme.surfaceCardHover
+                                        defaultBg: isSelected ? (root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft) : (root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard)
+                                        hoverBg: isSelected ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) : (root.themeConfig ? root.themeConfig.surfaceCardHover : Theme.surfaceCardHover)
                                         active: isSelected
-                                        activeBorderColor: root.themeConfig ? root.themeConfig.accentColor : Theme.accent
+                                        activeBorderColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
                                         onClicked: {
                                             if (root.themeConfig) root.themeConfig.setSpeedMode(modelData);
                                         }
@@ -512,10 +666,10 @@ Item {
                                         height: 60
                                         cornerRadius: Theme.cardRadius
                                         readonly property bool isSelected: root.themeConfig && root.themeConfig.perfMode === modelData.mode
-                                        defaultBg: isSelected ? Qt.rgba(204/255, 255/255, 0/255, 0.14) : Theme.surfaceCard
-                                        hoverBg: isSelected ? Qt.rgba(204/255, 255/255, 0/255, 0.22) : Theme.surfaceCardHover
+                                        defaultBg: isSelected ? (root.themeConfig ? root.themeConfig.accentSoft : Theme.accentSoft) : (root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard)
+                                        hoverBg: isSelected ? (root.themeConfig ? root.themeConfig.accentGlow : Theme.accentGlow) : (root.themeConfig ? root.themeConfig.surfaceCardHover : Theme.surfaceCardHover)
                                         active: isSelected
-                                        activeBorderColor: root.themeConfig ? root.themeConfig.accentColor : Theme.accent
+                                        activeBorderColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
                                         onClicked: {
                                             if (root.themeConfig) root.themeConfig.setPerfMode(modelData.mode);
                                         }

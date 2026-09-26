@@ -167,6 +167,7 @@ ShellRoot {
         // 1. App Launcher (Centered)
         Launcher {
             anchors.centerIn: parent
+            themeConfig: themeConfig
             isOpen: shellRoot.activePanel === "launcher"
             visible: shellRoot.activePanel === "launcher" || opacity > 0.001
             onCloseRequested: shellRoot.closeAllPopups()
@@ -195,6 +196,7 @@ ShellRoot {
             anchors.right: parent.right
             anchors.topMargin: 52
             anchors.rightMargin: 16
+            themeConfig: themeConfig
             systemData: systemData
             networkService: networkService
             audioService: audioService
@@ -211,6 +213,7 @@ ShellRoot {
             anchors.right: parent.right
             anchors.topMargin: 52
             anchors.rightMargin: 16
+            themeConfig: themeConfig
             networkService: networkService
             isOpen: shellRoot.activePanel === "network"
             visible: shellRoot.activePanel === "network" || opacity > 0.001
@@ -223,6 +226,7 @@ ShellRoot {
             anchors.right: parent.right
             anchors.topMargin: 52
             anchors.rightMargin: 16
+            themeConfig: themeConfig
             audioService: audioService
             isOpen: shellRoot.activePanel === "audio"
             visible: shellRoot.activePanel === "audio" || opacity > 0.001
@@ -235,6 +239,7 @@ ShellRoot {
             anchors.right: parent.right
             anchors.topMargin: 52
             anchors.rightMargin: 16
+            themeConfig: themeConfig
             batteryService: batteryService
             isOpen: shellRoot.activePanel === "battery"
             visible: shellRoot.activePanel === "battery" || opacity > 0.001
@@ -247,6 +252,7 @@ ShellRoot {
             anchors.right: parent.right
             anchors.topMargin: 52
             anchors.rightMargin: 16
+            themeConfig: themeConfig
             isOpen: shellRoot.activePanel === "notifications"
             visible: shellRoot.activePanel === "notifications" || opacity > 0.001
             onCloseRequested: shellRoot.closeAllPopups()

@@ -4,6 +4,7 @@ import "../Theme.js" as Theme
 Item {
     id: root
 
+    property var themeConfig: null
     required property var audioService
     property bool isOpen: false
 
@@ -18,13 +19,14 @@ Item {
     scale: isOpen ? 1.0 : 0.97
     y: isOpen ? 0 : -8
 
-    Behavior on opacity { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on scale { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
-    Behavior on y { NumberAnimation { duration: Theme.animPopup; easing.type: Easing.OutCubic } }
+    Behavior on opacity { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on scale { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
+    Behavior on y { NumberAnimation { duration: Theme.animPopup * (root.themeConfig ? root.themeConfig.animSpeedFactor : 1.0); easing.type: Easing.OutCubic } }
 
     GlassSurface {
         anchors.fill: parent
         level: 2
+        elevation: 2
         clip: true
 
         Column {
@@ -45,7 +47,7 @@ Item {
                     Text {
                         text: "󰕾"
                         font.pixelSize: 15
-                        color: Theme.accent
+                        color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                     }
 
                     Text {
@@ -53,7 +55,7 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 15
                         font.weight: Font.Bold
-                        color: Theme.text
+                        color: root.themeConfig ? root.themeConfig.text : Theme.text
                     }
                 }
 
@@ -63,14 +65,14 @@ Item {
                     width: 26
                     height: 26
                     cornerRadius: Theme.smallRadius
-                    defaultBg: Theme.surface
-                    hoverBg: Theme.surfaceHover
+                    defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                    hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                     onClicked: root.closeRequested()
                     Text {
                         anchors.centerIn: parent
                         text: "✕"
                         font.pixelSize: 11
-                        color: Theme.textMuted
+                        color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                     }
                 }
             }
@@ -80,9 +82,9 @@ Item {
                 width: parent.width
                 height: 52
                 radius: Theme.cardRadius
-                color: Theme.surfaceCard
+                color: root.themeConfig ? root.themeConfig.surfaceCard : Theme.surfaceCard
                 border.width: 1
-                border.color: Theme.glassBorderSubtle
+                border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
 
                 Row {
                     anchors.fill: parent
@@ -101,7 +103,7 @@ Item {
                             anchors.centerIn: parent
                             text: "󰓃"
                             font.pixelSize: 16
-                            color: Theme.text
+                            color: root.themeConfig ? root.themeConfig.text : Theme.text
                         }
                     }
 
@@ -115,7 +117,7 @@ Item {
                             font.family: Theme.fontFamily
                             font.pixelSize: 10
                             font.weight: Font.DemiBold
-                            color: Theme.textMuted
+                            color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                         }
 
                         Text {
@@ -123,7 +125,7 @@ Item {
                             font.family: Theme.fontFamily
                             font.pixelSize: 12
                             font.weight: Font.DemiBold
-                            color: Theme.text
+                            color: root.themeConfig ? root.themeConfig.text : Theme.text
                             elide: Text.ElideRight
                             width: parent.width
                         }
@@ -136,10 +138,10 @@ Item {
                         height: 34
                         cornerRadius: Theme.smallRadius
                         active: root.audioService ? root.audioService.muted : false
-                        activeColor: Qt.rgba(255/255, 85/255, 85/255, 0.2)
-                        activeBorderColor: "#ff5555"
-                        defaultBg: Theme.surface
-                        hoverBg: Theme.surfaceHover
+                        activeColor: Qt.rgba(248/255, 113/255, 113/255, 0.2)
+                        activeBorderColor: root.themeConfig ? root.themeConfig.danger : Theme.danger
+                        defaultBg: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                        hoverBg: root.themeConfig ? root.themeConfig.surfaceHover : Theme.surfaceHover
                         onClicked: {
                             if (root.audioService) root.audioService.toggleMute();
                         }
@@ -148,7 +150,9 @@ Item {
                             anchors.centerIn: parent
                             text: root.audioService && root.audioService.muted ? "󰝟" : "󰕾"
                             font.pixelSize: 14
-                            color: root.audioService && root.audioService.muted ? "#ff5555" : Theme.text
+                            color: root.audioService && root.audioService.muted 
+                                ? (root.themeConfig ? root.themeConfig.danger : Theme.danger) 
+                                : (root.themeConfig ? root.themeConfig.text : Theme.text)
                         }
                     }
                 }
@@ -170,7 +174,7 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 11
                         font.weight: Font.DemiBold
-                        color: Theme.textMuted
+                        color: root.themeConfig ? root.themeConfig.textMuted : Theme.textMuted
                     }
 
                     Text {
@@ -180,12 +184,14 @@ Item {
                         font.family: Theme.monoFontFamily
                         font.pixelSize: 12
                         font.weight: Font.Bold
-                        color: Theme.accent
+                        color: root.themeConfig ? root.themeConfig.accent : Theme.accent
                     }
                 }
 
                 Slider {
                     width: parent.width
+                    trackColor: root.themeConfig ? root.themeConfig.surface : Theme.surface
+                    progressColor: root.themeConfig ? root.themeConfig.accent : Theme.accent
                     value: root.audioService ? root.audioService.volume : 0.5
                     onMoved: function(val) {
                         if (root.audioService) root.audioService.setVolume(val);

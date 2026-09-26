@@ -6,6 +6,8 @@ import "../Theme.js" as Theme
 Item {
     id: root
 
+    property var themeConfig: null
+
     readonly property int totalWorkspaces: 10
     readonly property real itemWidth: 26
     readonly property real itemHeight: 26
@@ -21,9 +23,9 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: height / 2
-        color: Qt.rgba(0, 0, 0, 0.22)
+        color: Qt.rgba(0, 0, 0, 0.28)
         border.width: 1
-        border.color: Theme.glassBorderSubtle
+        border.color: root.themeConfig ? root.themeConfig.borderSubtle : Theme.glassBorderSubtle
     }
 
     Item {
@@ -31,15 +33,16 @@ Item {
         width: root.totalWorkspaces * root.itemWidth + (root.totalWorkspaces - 1) * root.spacing
         height: root.itemHeight
 
-        // Active Cream Indicator (glides smoothly across numbers)
+        // Active Indicator (glides smoothly across numbers)
+        // Wallpaper-derived accent with high-contrast text
         Rectangle {
             id: activeIndicator
             width: root.itemWidth
             height: root.itemHeight
             radius: width / 2
-            color: Theme.activeWorkspace
+            color: root.themeConfig ? root.themeConfig.activeWorkspace : Theme.activeWorkspace
             border.width: 1
-            border.color: Qt.rgba(255, 255, 255, 0.7)
+            border.color: root.themeConfig ? root.themeConfig.borderStrong : Qt.rgba(255, 255, 255, 0.7)
             z: 0
 
             // Target X position based on active workspace (1-10)
@@ -47,9 +50,16 @@ Item {
             x: targetIndex * (root.itemWidth + root.spacing)
             y: 0
 
-            // Butter smooth glide animation (150ms, Easing.OutCubic)
+            // Butter smooth glide animation (180ms, Easing.OutCubic)
             Behavior on x {
                 NumberAnimation {
+                    duration: root.themeConfig ? Math.max(20, Math.round(180 * root.themeConfig.animSpeedFactor)) : Theme.animNormal
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+            Behavior on color {
+                ColorAnimation {
                     duration: Theme.animFast
                     easing.type: Easing.OutCubic
                 }
@@ -73,11 +83,11 @@ Item {
                     width: root.itemWidth
                     height: root.itemHeight
 
-                    // Subtle hover backdrop
+                    // Subtle hover glass highlight
                     Rectangle {
                         anchors.fill: parent
                         radius: width / 2
-                        color: Qt.rgba(255, 255, 255, 0.08)
+                        color: Qt.rgba(255, 255, 255, 0.10)
                         visible: mouseArea.containsMouse && !workspaceItem.isActive
                         opacity: visible ? 1.0 : 0.0
                         Behavior on opacity { NumberAnimation { duration: Theme.animMicro } }
@@ -90,7 +100,15 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 11
                         font.weight: workspaceItem.isActive ? Font.Bold : Font.DemiBold
-                        color: workspaceItem.isActive ? Theme.activeText : (mouseArea.containsMouse ? "#ffffff" : Theme.inactiveWorkspaceText)
+                        color: {
+                            if (workspaceItem.isActive) {
+                                return root.themeConfig ? root.themeConfig.activeWorkspaceText : Theme.activeWorkspaceText;
+                            }
+                            if (mouseArea.containsMouse) {
+                                return root.themeConfig ? root.themeConfig.text : Theme.text;
+                            }
+                            return root.themeConfig ? root.themeConfig.textMuted : Theme.inactiveWorkspaceText;
+                        }
 
                         Behavior on color {
                             ColorAnimation {

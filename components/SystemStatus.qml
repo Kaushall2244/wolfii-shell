@@ -21,11 +21,11 @@ Row {
     // Integrated Status Cluster
     Rectangle {
         height: 28
-        width: clusterRow.implicitWidth + 12
+        width: clusterRow.implicitWidth + 8
         radius: Theme.smallRadius
-        color: Qt.rgba(255, 255, 255, 0.03)
+        color: Qt.rgba(0, 0, 0, 0.25)
         border.width: 1
-        border.color: Theme.glassBorderSubtle
+        border.color: Theme.glassBorder
 
         Row {
             id: clusterRow
@@ -35,14 +35,14 @@ Row {
             // Wi-Fi Button
             Item {
                 visible: !root.themeConfig || root.themeConfig.showWifi
-                width: 26
+                width: 28
                 height: 24
                 anchors.verticalCenter: parent.verticalCenter
 
                 Rectangle {
                     anchors.fill: parent
                     radius: 6
-                    color: wifiMouse.containsMouse ? Theme.surfaceHover : "transparent"
+                    color: wifiMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.12) : (root.networkService && root.networkService.isConnected ? Qt.rgba(255, 255, 255, 0.04) : "transparent")
                     Behavior on color { ColorAnimation { duration: Theme.animMicro } }
                 }
 
@@ -50,7 +50,7 @@ Row {
                     anchors.centerIn: parent
                     text: root.networkService && root.networkService.isConnected ? "󰤨" : "󰤭"
                     font.pixelSize: 13
-                    color: root.networkService && root.networkService.isConnected ? Theme.text : Theme.textMuted
+                    color: root.networkService && root.networkService.isConnected ? "#ffffff" : Theme.textMuted
                 }
 
                 MouseArea {
@@ -65,14 +65,14 @@ Row {
             // Audio Button
             Item {
                 visible: !root.themeConfig || root.themeConfig.showAudio
-                width: 26
+                width: 28
                 height: 24
                 anchors.verticalCenter: parent.verticalCenter
 
                 Rectangle {
                     anchors.fill: parent
                     radius: 6
-                    color: audioMouse.containsMouse ? Theme.surfaceHover : "transparent"
+                    color: audioMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.12) : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.animMicro } }
                 }
 
@@ -86,7 +86,7 @@ Row {
                         return "󰕿";
                     }
                     font.pixelSize: 13
-                    color: root.audioService && !root.audioService.muted ? Theme.text : Theme.textMuted
+                    color: root.audioService && !root.audioService.muted ? "#ffffff" : Theme.textMuted
                 }
 
                 MouseArea {
@@ -101,21 +101,21 @@ Row {
             // Battery Button (dynamically hidden if no battery)
             Item {
                 visible: (!root.themeConfig || root.themeConfig.showBattery) && (root.batteryService && root.batteryService.hasBattery)
-                width: batRow.implicitWidth + 8
+                width: batRow.implicitWidth + 10
                 height: 24
                 anchors.verticalCenter: parent.verticalCenter
 
                 Rectangle {
                     anchors.fill: parent
                     radius: 6
-                    color: batMouse.containsMouse ? Theme.surfaceHover : "transparent"
+                    color: batMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.12) : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.animMicro } }
                 }
 
                 Row {
                     id: batRow
                     anchors.centerIn: parent
-                    spacing: 3
+                    spacing: 4
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
@@ -125,7 +125,7 @@ Row {
                             if (!root.batteryService) return Theme.textMuted;
                             if (root.batteryService.isCharging) return root.themeConfig ? root.themeConfig.accentColor : Theme.accent;
                             if (root.batteryService.percentage <= 20) return "#ff5555";
-                            return Theme.text;
+                            return "#ffffff";
                         }
                     }
 
@@ -133,9 +133,9 @@ Row {
                         anchors.verticalCenter: parent.verticalCenter
                         text: (root.batteryService ? root.batteryService.percentage : 100).toString()
                         font.family: Theme.monoFontFamily
-                        font.pixelSize: 10
-                        font.weight: Font.DemiBold
-                        color: Theme.text
+                        font.pixelSize: 11
+                        font.weight: Font.Bold
+                        color: "#ffffff"
                     }
                 }
 
@@ -150,14 +150,14 @@ Row {
 
             // Notifications Trigger
             Item {
-                width: 26
+                width: 28
                 height: 24
                 anchors.verticalCenter: parent.verticalCenter
 
                 Rectangle {
                     anchors.fill: parent
                     radius: 6
-                    color: notifMouse.containsMouse ? Theme.surfaceHover : "transparent"
+                    color: notifMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.12) : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.animMicro } }
                 }
 
@@ -165,7 +165,7 @@ Row {
                     anchors.centerIn: parent
                     text: "󰂚"
                     font.pixelSize: 13
-                    color: Theme.text
+                    color: "#ffffff"
                 }
 
                 MouseArea {
@@ -183,12 +183,12 @@ Row {
     AnimatedButton {
         id: wolfiiBtn
         visible: !root.themeConfig || root.themeConfig.showWolfii
-        width: 32
+        width: 36
         height: 28
         cornerRadius: Theme.smallRadius
-        defaultBg: Theme.surface
-        hoverBg: Theme.surfaceHover
-        activeColor: Qt.rgba(204/255, 255/255, 0/255, 0.18)
+        defaultBg: Qt.rgba(255, 255, 255, 0.08)
+        hoverBg: Qt.rgba(255, 255, 255, 0.16)
+        activeColor: Qt.rgba(204/255, 255/255, 0/255, 0.22)
         activeBorderColor: root.themeConfig ? root.themeConfig.accentColor : Theme.accent
         onClicked: root.toggleControlCenter()
 
@@ -201,7 +201,7 @@ Row {
                 font.family: Theme.fontFamily
                 font.pixelSize: 12
                 font.weight: Font.Black
-                color: wolfiiBtn.hovered ? (root.themeConfig ? root.themeConfig.accentColor : Theme.accent) : Theme.text
+                color: wolfiiBtn.hovered ? (root.themeConfig ? root.themeConfig.accentColor : Theme.accent) : "#ffffff"
                 Behavior on color { ColorAnimation { duration: Theme.animMicro } }
             }
 

@@ -39,18 +39,21 @@ Item {
         onLoaded: {
             var raw = parseFloat(fileTemp.text().trim());
             if (!isNaN(raw) && raw > 0) {
-                root.tempCelsius = Math.round(raw > 200 ? raw / 1000 : raw);
-                root.hasTemp = true;
+                var c = Math.round(raw > 200 ? raw / 1000 : raw);
+                if (c > 0 && c < 130) {
+                    root.tempCelsius = c;
+                    root.hasTemp = true;
+                }
             }
         }
     }
 
-    // One-time dynamic detection of best thermal path
+    // Dynamic detection of best thermal path
     Process {
         id: thermalDetectProc
         command: [
             "sh", "-c",
-            "for h in /sys/class/hwmon/hwmon*; do [ -d \"$h\" ] || continue; for l in \"$h\"/temp*_label; do [ -f \"$l\" ] || continue; if grep -qE 'Package id 0|Tctl|Tdie|CPU' \"$l\" 2>/dev/null; then inp=\"${l%_label}_input\"; [ -f \"$inp\" ] && echo \"$inp\" && exit 0; fi; done; done; for z in /sys/class/thermal/thermal_zone*; do [ -d \"$z\" ] || continue; type=$(cat \"$z/type\" 2>/dev/null); case \"$type\" in x86_pkg_temp|cpu*|TCPU|soc_thermal) [ -f \"$z/temp\" ] && echo \"$z/temp\" && exit 0;; esac; done; for t in /sys/class/hwmon/hwmon*/temp1_input /sys/class/thermal/thermal_zone0/temp; do [ -f \"$t\" ] && echo \"$t\" && exit 0; done"
+            "for l in /sys/class/hwmon/hwmon*/temp*_label; do [ -f \"$l\" ] && grep -qE 'Package id 0|Tctl|Tdie|CPU' \"$l\" 2>/dev/null && echo \"${l%_label}_input\" && exit 0; done; for t in /sys/class/hwmon/hwmon*/temp1_input /sys/class/thermal/thermal_zone*/temp; do [ -f \"$t\" ] && echo \"$t\" && exit 0; done"
         ]
         running: true
         stdout: StdioCollector {
@@ -102,6 +105,18 @@ Item {
     function updateTemp() {
         if (root._thermalPath.length > 0) {
             fileTemp.reload();
+        }
+    }
+
+    // Startup prime timer
+    Timer {
+        interval: 150
+        running: true
+        repeat: false
+        onTriggered: {
+            root.updateCpu();
+            root.updateRam();
+            root.updateTemp();
         }
     }
 

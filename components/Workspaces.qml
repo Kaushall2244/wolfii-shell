@@ -17,11 +17,11 @@ Item {
     implicitWidth: totalWorkspaces * itemWidth + (totalWorkspaces - 1) * spacing + 6
     implicitHeight: itemHeight + 4
 
-    // Subtle integrated recessed track
+    // Subtle recessed glass track
     Rectangle {
         anchors.fill: parent
         radius: height / 2
-        color: Qt.rgba(1, 1, 1, 0.03)
+        color: Qt.rgba(0, 0, 0, 0.22)
         border.width: 1
         border.color: Theme.glassBorderSubtle
     }
@@ -39,7 +39,7 @@ Item {
             radius: width / 2
             color: Theme.activeWorkspace
             border.width: 1
-            border.color: Qt.rgba(255, 255, 255, 0.6)
+            border.color: Qt.rgba(255, 255, 255, 0.7)
             z: 0
 
             // Target X position based on active workspace (1-10)
@@ -47,7 +47,7 @@ Item {
             x: targetIndex * (root.itemWidth + root.spacing)
             y: 0
 
-            // Butter smooth glide animation (160ms, Easing.OutCubic)
+            // Butter smooth glide animation (150ms, Easing.OutCubic)
             Behavior on x {
                 NumberAnimation {
                     duration: Theme.animFast
@@ -77,7 +77,7 @@ Item {
                     Rectangle {
                         anchors.fill: parent
                         radius: width / 2
-                        color: Qt.rgba(255, 255, 255, 0.06)
+                        color: Qt.rgba(255, 255, 255, 0.08)
                         visible: mouseArea.containsMouse && !workspaceItem.isActive
                         opacity: visible ? 1.0 : 0.0
                         Behavior on opacity { NumberAnimation { duration: Theme.animMicro } }
@@ -89,8 +89,8 @@ Item {
                         text: workspaceItem.wsId.toString()
                         font.family: Theme.fontFamily
                         font.pixelSize: 11
-                        font.weight: workspaceItem.isActive ? Font.Bold : Font.Medium
-                        color: workspaceItem.isActive ? Theme.activeText : (mouseArea.containsMouse ? Theme.text : Theme.textMuted)
+                        font.weight: workspaceItem.isActive ? Font.Bold : Font.DemiBold
+                        color: workspaceItem.isActive ? Theme.activeText : (mouseArea.containsMouse ? "#ffffff" : Theme.inactiveWorkspaceText)
 
                         Behavior on color {
                             ColorAnimation {

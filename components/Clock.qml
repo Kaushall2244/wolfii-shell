@@ -8,8 +8,8 @@ Item {
     property string timeString: ""
     property string dateString: ""
 
-    implicitWidth: timeLabel.implicitWidth + 12
-    implicitHeight: 28
+    implicitWidth: clockPill.implicitWidth
+    implicitHeight: 26
 
     function updateTime() {
         var now = new Date();
@@ -40,14 +40,35 @@ Item {
         }
     }
 
-    Text {
-        id: timeLabel
+    // Subtle integrated glass chip
+    Rectangle {
+        id: clockPill
         anchors.centerIn: parent
-        text: root.timeString
-        font.family: Theme.fontFamily
-        font.pixelSize: 13
-        font.weight: Font.DemiBold
-        font.letterSpacing: 0.6
-        color: Theme.text
+        implicitWidth: timeLabel.implicitWidth + 20
+        height: 26
+        radius: height / 2
+        color: clockMouse.containsMouse ? Qt.rgba(255, 255, 255, 0.08) : Qt.rgba(255, 255, 255, 0.04)
+        border.width: 1
+        border.color: clockMouse.containsMouse ? Theme.glassBorder : Theme.glassBorderSubtle
+
+        Behavior on color { ColorAnimation { duration: Theme.animMicro } }
+        Behavior on border.color { ColorAnimation { duration: Theme.animMicro } }
+
+        Text {
+            id: timeLabel
+            anchors.centerIn: parent
+            text: root.timeString
+            font.family: Theme.fontFamily
+            font.pixelSize: 12
+            font.weight: Font.Bold
+            font.letterSpacing: 0.5
+            color: "#ffffff"
+        }
+
+        MouseArea {
+            id: clockMouse
+            anchors.fill: parent
+            hoverEnabled: true
+        }
     }
 }

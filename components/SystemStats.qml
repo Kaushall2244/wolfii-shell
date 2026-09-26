@@ -9,7 +9,7 @@ Row {
 
     spacing: 4
 
-    // CPU Metric (◉ 33)
+    // CPU Metric (◉ 11)
     SystemMetric {
         symbol: "◉"
         value: root.systemData ? root.systemData.cpuUsage.toString() : "0"
@@ -23,9 +23,9 @@ Row {
         tooltipDetail: (root.systemData ? root.systemData.cpuUsage : 0) + "%"
     }
 
-    // RAM Metric (▣ 47)
+    // RAM Metric (◉ 42)
     SystemMetric {
-        symbol: "▣"
+        symbol: "◉"
         value: root.systemData ? root.systemData.ramUsage.toString() : "0"
         indicatorColor: {
             var val = root.systemData ? root.systemData.ramUsage : 0;
@@ -39,10 +39,10 @@ Row {
                        (root.systemData ? root.systemData.ramTotalGb : 0) + " GB)"
     }
 
-    // Temperature Metric (⌁ 59°)
+    // Temperature Metric (◉ 48°) - Strictly hidden if not detected
     SystemMetric {
-        visible: root.systemData && root.systemData.hasTemp
-        symbol: "⌁"
+        visible: root.systemData && root.systemData.hasTemp && root.systemData.tempCelsius > 0
+        symbol: "◉"
         value: (root.systemData ? root.systemData.tempCelsius : 0) + "°"
         indicatorColor: {
             var val = root.systemData ? root.systemData.tempCelsius : 0;

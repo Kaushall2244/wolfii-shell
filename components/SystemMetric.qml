@@ -11,42 +11,42 @@ Item {
     property color indicatorColor: Theme.accent
     property bool showIndicator: true
 
-    implicitWidth: row.implicitWidth + 14
+    implicitWidth: chipBg.implicitWidth
     implicitHeight: 26
 
     Rectangle {
-        id: bg
+        id: chipBg
         anchors.fill: parent
+        implicitWidth: row.implicitWidth + 14
         radius: Theme.smallRadius
-        color: mouseArea.containsMouse ? Qt.rgba(255, 255, 255, 0.06) : "transparent"
+        color: mouseArea.containsMouse ? Qt.rgba(255, 255, 255, 0.08) : Qt.rgba(255, 255, 255, 0.03)
         border.width: 1
-        border.color: mouseArea.containsMouse ? Theme.glassBorderSubtle : "transparent"
+        border.color: mouseArea.containsMouse ? Theme.glassBorder : Theme.glassBorderSubtle
 
         Behavior on color { ColorAnimation { duration: Theme.animMicro } }
         Behavior on border.color { ColorAnimation { duration: Theme.animMicro } }
-    }
 
-    Row {
-        id: row
-        anchors.centerIn: parent
-        spacing: 5
+        Row {
+            id: row
+            anchors.centerIn: parent
+            spacing: 5
 
-        // Modern compact symbol (◉, ▣, ⌁)
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: root.symbol
-            font.pixelSize: 11
-            color: root.indicatorColor
-            visible: root.showIndicator
-        }
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.symbol
+                font.pixelSize: 11
+                color: root.indicatorColor
+                visible: root.showIndicator
+            }
 
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: root.value
-            font.family: Theme.monoFontFamily
-            font.pixelSize: 11
-            font.weight: Font.DemiBold
-            color: Theme.text
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.value
+                font.family: Theme.monoFontFamily
+                font.pixelSize: 11
+                font.weight: Font.Bold
+                color: "#ffffff"
+            }
         }
     }
 

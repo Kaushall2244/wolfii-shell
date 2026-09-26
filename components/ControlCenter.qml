@@ -18,7 +18,7 @@ Item {
     signal closeRequested()
 
     width: 380
-    height: (root.brightnessService && root.brightnessService.hasBrightness) ? 460 : 390
+    height: (root.brightnessService && root.brightnessService.hasBrightness) ? 460 : 392
     clip: true
 
     visible: opacity > 0.001
@@ -54,9 +54,9 @@ Item {
                         width: 24
                         height: 24
                         radius: Theme.smallRadius
-                        color: Theme.surface
+                        color: Qt.rgba(255, 255, 255, 0.08)
                         border.width: 1
-                        border.color: Theme.accentGlow
+                        border.color: Theme.glassBorder
                         Text {
                             anchors.centerIn: parent
                             text: "W"
@@ -69,11 +69,11 @@ Item {
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "Wolfii Control Center"
+                        text: "Control Center"
                         font.family: Theme.fontFamily
                         font.pixelSize: 14
                         font.weight: Font.Bold
-                        color: Theme.text
+                        color: "#ffffff"
                     }
                 }
 
@@ -83,8 +83,8 @@ Item {
                     width: 26
                     height: 26
                     cornerRadius: Theme.smallRadius
-                    defaultBg: Theme.surface
-                    hoverBg: Theme.surfaceHover
+                    defaultBg: Qt.rgba(255, 255, 255, 0.06)
+                    hoverBg: Qt.rgba(255, 255, 255, 0.14)
                     onClicked: root.closeRequested()
                     Text {
                         anchors.centerIn: parent
@@ -104,11 +104,11 @@ Item {
                 // Wi-Fi Toggle Card
                 AnimatedButton {
                     width: (parent.width - 10) / 2
-                    height: 58
+                    height: 60
                     cornerRadius: Theme.cardRadius
                     active: root.networkService ? root.networkService.isWifiEnabled : true
                     activeColor: Theme.surfaceCard
-                    activeBorderColor: root.networkService && root.networkService.isConnected ? Theme.accentGlow : Theme.glassBorderSubtle
+                    activeBorderColor: root.networkService && root.networkService.isConnected ? Qt.rgba(204/255, 255/255, 0/255, 0.35) : Theme.glassBorderSubtle
                     defaultBg: Theme.surfaceCard
                     hoverBg: Theme.surfaceCardHover
                     onClicked: {
@@ -123,17 +123,17 @@ Item {
                         Rectangle {
                             width: 36
                             height: 36
-                            radius: Theme.smallRadius
-                            color: root.networkService && root.networkService.isConnected ? Theme.accent : Theme.surface
+                            radius: 18
+                            color: root.networkService && root.networkService.isConnected ? Qt.rgba(204/255, 255/255, 0/255, 0.18) : Qt.rgba(255, 255, 255, 0.08)
                             border.width: 1
-                            border.color: root.networkService && root.networkService.isConnected ? "transparent" : Theme.glassBorderSubtle
+                            border.color: root.networkService && root.networkService.isConnected ? Theme.accentGlow : Theme.glassBorderSubtle
                             anchors.verticalCenter: parent.verticalCenter
 
                             Text {
                                 anchors.centerIn: parent
                                 text: "󰤨"
                                 font.pixelSize: 16
-                                color: root.networkService && root.networkService.isConnected ? "#111114" : Theme.textMuted
+                                color: root.networkService && root.networkService.isConnected ? Theme.accent : Theme.textMuted
                             }
                         }
 
@@ -147,7 +147,7 @@ Item {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 12
                                 font.weight: Font.Bold
-                                color: Theme.text
+                                color: "#ffffff"
                             }
                             Text {
                                 text: root.networkService && root.networkService.isConnected ? root.networkService.activeSsid : "Disconnected"
@@ -166,11 +166,11 @@ Item {
                     id: btCard
                     property bool btEnabled: true
                     width: (parent.width - 10) / 2
-                    height: 58
+                    height: 60
                     cornerRadius: Theme.cardRadius
                     active: btEnabled
                     activeColor: Theme.surfaceCard
-                    activeBorderColor: btEnabled ? Theme.accentGlow : Theme.glassBorderSubtle
+                    activeBorderColor: btEnabled ? Qt.rgba(204/255, 255/255, 0/255, 0.35) : Theme.glassBorderSubtle
                     defaultBg: Theme.surfaceCard
                     hoverBg: Theme.surfaceCardHover
                     onClicked: {
@@ -188,17 +188,17 @@ Item {
                         Rectangle {
                             width: 36
                             height: 36
-                            radius: Theme.smallRadius
-                            color: btCard.btEnabled ? Theme.accent : Theme.surface
+                            radius: 18
+                            color: btCard.btEnabled ? Qt.rgba(204/255, 255/255, 0/255, 0.18) : Qt.rgba(255, 255, 255, 0.08)
                             border.width: 1
-                            border.color: btCard.btEnabled ? "transparent" : Theme.glassBorderSubtle
+                            border.color: btCard.btEnabled ? Theme.accentGlow : Theme.glassBorderSubtle
                             anchors.verticalCenter: parent.verticalCenter
 
                             Text {
                                 anchors.centerIn: parent
                                 text: "󰂯"
                                 font.pixelSize: 16
-                                color: btCard.btEnabled ? "#111114" : Theme.textMuted
+                                color: btCard.btEnabled ? Theme.accent : Theme.textMuted
                             }
                         }
 
@@ -212,7 +212,7 @@ Item {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 12
                                 font.weight: Font.Bold
-                                color: Theme.text
+                                color: "#ffffff"
                             }
                             Text {
                                 text: btCard.btEnabled ? "Enabled" : "Disabled"
@@ -244,7 +244,7 @@ Item {
                     Column {
                         anchors.fill: parent
                         anchors.margins: 10
-                        spacing: 4
+                        spacing: 6
 
                         Item {
                             width: parent.width
@@ -265,7 +265,7 @@ Item {
                                     font.family: Theme.fontFamily
                                     font.pixelSize: 11
                                     font.weight: Font.DemiBold
-                                    color: Theme.textMuted
+                                    color: "#ffffff"
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                             }
@@ -304,7 +304,7 @@ Item {
                     Column {
                         anchors.fill: parent
                         anchors.margins: 10
-                        spacing: 4
+                        spacing: 6
 
                         Item {
                             width: parent.width
@@ -325,7 +325,7 @@ Item {
                                     font.family: Theme.fontFamily
                                     font.pixelSize: 11
                                     font.weight: Font.DemiBold
-                                    color: Theme.textMuted
+                                    color: "#ffffff"
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                             }
@@ -368,20 +368,20 @@ Item {
                     Row {
                         spacing: 5
                         Text { text: "◉"; font.pixelSize: 10; color: Theme.accent; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: "CPU " + (root.systemData ? root.systemData.cpuUsage : 0) + "%"; font.family: Theme.monoFontFamily; font.pixelSize: 11; color: Theme.text }
+                        Text { text: "CPU " + (root.systemData ? root.systemData.cpuUsage : 0) + "%"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: "#ffffff" }
                     }
 
                     Row {
                         spacing: 5
-                        Text { text: "▣"; font.pixelSize: 10; color: Theme.accent; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: "RAM " + (root.systemData ? root.systemData.ramUsage : 0) + "%"; font.family: Theme.monoFontFamily; font.pixelSize: 11; color: Theme.text }
+                        Text { text: "◉"; font.pixelSize: 10; color: Theme.accent; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: "RAM " + (root.systemData ? root.systemData.ramUsage : 0) + "%"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: "#ffffff" }
                     }
 
                     Row {
-                        visible: root.systemData && root.systemData.hasTemp
+                        visible: root.systemData && root.systemData.hasTemp && root.systemData.tempCelsius > 0
                         spacing: 5
-                        Text { text: "⌁"; font.pixelSize: 10; color: Theme.accent; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: (root.systemData ? root.systemData.tempCelsius : 0) + "°C"; font.family: Theme.monoFontFamily; font.pixelSize: 11; color: Theme.text }
+                        Text { text: "◉"; font.pixelSize: 10; color: Theme.accent; anchors.verticalCenter: parent.verticalCenter }
+                        Text { text: (root.systemData ? root.systemData.tempCelsius : 0) + "°C"; font.family: Theme.monoFontFamily; font.pixelSize: 11; font.weight: Font.Bold; color: "#ffffff" }
                     }
                 }
             }
@@ -410,7 +410,7 @@ Item {
                             lockProc.running = true;
                             root.closeRequested();
                         }
-                        Text { anchors.centerIn: parent; text: "󰌾"; font.pixelSize: 15; color: Theme.text }
+                        Text { anchors.centerIn: parent; text: "󰌾"; font.pixelSize: 15; color: "#ffffff" }
                     }
 
                     // Logout
@@ -421,7 +421,7 @@ Item {
                         defaultBg: Theme.surfaceCard
                         hoverBg: Theme.surfaceCardHover
                         onClicked: root.confirmAction = "logout"
-                        Text { anchors.centerIn: parent; text: "󰍃"; font.pixelSize: 15; color: Theme.text }
+                        Text { anchors.centerIn: parent; text: "󰍃"; font.pixelSize: 15; color: "#ffffff" }
                     }
 
                     // Restart
@@ -432,7 +432,7 @@ Item {
                         defaultBg: Theme.surfaceCard
                         hoverBg: Theme.surfaceCardHover
                         onClicked: root.confirmAction = "restart"
-                        Text { anchors.centerIn: parent; text: "󰑐"; font.pixelSize: 15; color: Theme.text }
+                        Text { anchors.centerIn: parent; text: "󰑐"; font.pixelSize: 15; color: "#ffffff" }
                     }
 
                     // Shutdown
@@ -460,7 +460,7 @@ Item {
                         font.family: Theme.fontFamily
                         font.pixelSize: 12
                         font.weight: Font.Bold
-                        color: Theme.text
+                        color: "#ffffff"
                         width: 140
                     }
 

@@ -2,50 +2,49 @@
 // Apple-Inspired Liquid Glass + High Contrast Wallpaper-Aware Palette
 // Note: per specifications, do NOT use .pragma library
 
-// Base Colors
-var background = "#0e0e12";
-var backgroundSoft = "#14141a";
+// Base Solid Colors
+var background = "#0a0a0e";
+var backgroundSoft = "#101015";
 
-// Glass Surfaces (Neutral Adaptive Liquid Glass)
-// Base colors use high alpha so background is never washed out,
-// preventing any desktop/editor text from bleeding through.
-var glassStrong = "#fa101015";       // Level 3 (~98% deep charcoal)
-var glassStrongBg = "#101015";
+// Liquid Glass Surfaces (0.84 - 0.95 opacity for strong wallpaper awareness without bleed-through)
+var glassStrong = "#f20c0c10";       // Level 3 (~95% deep charcoal) - Modals, Settings, Control Center
+var glassStrongBg = "#0c0c10";
 
-var glassMedium = "#f7131319";       // Level 2 (~97% deep charcoal)
-var glassMediumBg = "#131319";
+var glassMedium = "#eb0e0e13";       // Level 2 (~92% deep charcoal) - Floating panels (Audio, Wifi, Battery)
+var glassMediumBg = "#0e0e13";
 
-var glassSoft = "#f216161f";         // Level 1 (~95% deep charcoal)
-var glassSoftBg = "#16161f";
+var glassSoft = "#e00d0d12";         // Level 1 (~88% deep charcoal) - TopBar surface
+var glassSoftBg = "#0d0d12";
 
 // Interactive / Layered Surfaces
-var surface = "#1e1e27";             // Secondary surface
-var surfaceHover = "#2b2b38";        // Hover state
-var surfaceActive = "#38384a";       // Pressed state
-var surfaceCard = "#171721";         // Grouped card containers
-var surfaceCardHover = "#222230";    // Card hover
+var surface = "#181822";             // Button/chip surface
+var surfaceHover = "#242432";        // Button hover
+var surfaceActive = "#303042";       // Pressed state
+var surfaceCard = "#16161f";         // Grouped card containers
+var surfaceCardHover = "#1f1f2b";    // Card hover
 
 // Glass Borders & Specular Highlights
-var glassBorder = "#28ffffff";       // Crisp 16% white border
-var glassBorderStrong = "#44ffffff"; // 27% white border for active/focused
-var glassBorderSubtle = "#18ffffff"; // 9% white border for dividers/cards
-var glassHighlight = "#38ffffff";    // Specular top edge highlight
-var glassShadow = "#000000cc";       // Ambient depth drop shadow
+var glassBorder = "#24ffffff";       // 14% white border
+var glassBorderStrong = "#3affffff"; // 23% white border for active/focused
+var glassBorderSubtle = "#16ffffff"; // 8% white border for dividers/cards
+var glassHighlight = "#38ffffff";    // 22% specular top edge highlight
+var glassShadow = "#66000000";       // Soft drop shadow
 
-// Text Colors (High Contrast & High Readability)
-var text = "#f8f8fc";                // Primary near-white text
-var textMuted = "#9494a4";           // Secondary muted text
-var textDim = "#626272";             // Inactive/placeholder text
+// Text Colors (High Contrast & High Readability over Dark Glass)
+var text = "#ffffff";                // Pure white primary text
+var textMuted = "#b0b0c2";           // Light gray readable secondary text
+var textDim = "#78788c";             // Inactive/placeholder text
 
-// Wolfii Identity & Accent
+// Wolfii Identity & Accent (Used tastefully for highlights, not entire bricks)
 var accent = "#ccff00";              // Signature Wolfii lime accent
-var accentSoft = "#28ccff00";        // 16% accent tint for backgrounds
-var accentGlow = "#50ccff00";        // 31% accent for borders/glows
+var accentSoft = "#24ccff00";        // 14% accent tint for backdrops
+var accentGlow = "#48ccff00";        // 28% accent for borders/glows
 var accentHover = "#d8ff33";         // Slightly brighter accent
 
 // Workspaces
-var activeWorkspace = "#d6d3b8";     // Elegant cream active indicator
-var activeText = "#16161c";          // Deep dark text on active indicator
+var activeWorkspace = "#eae7d2";     // Refined cream active indicator
+var activeText = "#0e0e12";          // Deep dark text on active indicator
+var inactiveWorkspaceText = "#c4c4d6"; // High contrast light gray for inactive numbers
 
 // Radii
 var radius = 16;
@@ -63,12 +62,12 @@ var spaceXl = 16;
 var space2Xl = 20;
 var space3Xl = 24;
 
-// Animation Durations (ms)
-var animMicro = 120;
-var animFast = 150;
-var animNormal = 180;
-var animPopup = 220;
-var animLarge = 280;
+// Animation Durations (ms) - Snappy & Smooth (Easing.OutCubic)
+var animMicro = 100;
+var animFast = 140;
+var animNormal = 160;
+var animPopup = 200;
+var animLarge = 240;
 
 // Legacy / Component Compatibility Aliases
 var glassL1Bg = glassSoft;

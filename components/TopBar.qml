@@ -46,9 +46,6 @@ PanelWindow {
         anchors.leftMargin: 12
         anchors.rightMargin: 12
 
-        // Section 28:
-        // visible: opacity 1, y 0
-        // hidden: opacity 0, y slightly above screen
         y: root.barActuallyVisible ? 0 : -50
         opacity: root.barActuallyVisible ? 1.0 : 0.0
 
@@ -66,10 +63,21 @@ PanelWindow {
             }
         }
 
-        // LEVEL 1: Light Glass Topbar
+        // Ambient soft drop shadow for physical glass depth over wallpaper
+        Rectangle {
+            anchors.fill: parent
+            anchors.topMargin: 2
+            anchors.bottomMargin: -2
+            radius: root.themeConfig ? root.themeConfig.cornerRadius : Theme.radius
+            color: "#66000000"
+            z: 0
+        }
+
+        // LEVEL 1: Dark Liquid Glass Topbar
         GlassSurface {
             anchors.fill: parent
             level: 1
+            z: 1
             customRadius: root.themeConfig ? root.themeConfig.cornerRadius : Theme.radius
 
             // Left Section: Workspaces (10 numbers, circular gliding indicator)
@@ -80,7 +88,7 @@ PanelWindow {
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            // Center Section: Clock (08:04AM format)
+            // Center Section: Clock (03:19PM clean prominent text)
             Clock {
                 id: clockWidget
                 anchors.centerIn: parent
@@ -93,7 +101,7 @@ PanelWindow {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 12
 
-                // Outer Topbar System Stats: ◉ 33   ▣ 47   ⌁ 59°
+                // Outer Topbar System Stats: ◉ 11   ◉ 42   ◉ 48°
                 SystemStats {
                     id: statsWidget
                     anchors.verticalCenter: parent.verticalCenter

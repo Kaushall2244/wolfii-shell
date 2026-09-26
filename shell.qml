@@ -31,7 +31,7 @@ ShellRoot {
 
     // Shared Service Providers
     ThemeConfig { id: themeConfig }
-    SystemData { id: systemData }
+    SystemData { id: systemData; refreshInterval: themeConfig.statsInterval }
     NetworkService { id: networkService }
     AudioService { id: audioService }
     BatteryService { id: batteryService }

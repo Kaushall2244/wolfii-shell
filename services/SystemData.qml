@@ -12,6 +12,7 @@ Item {
     property real ramTotalGb: 0.0
     property int tempCelsius: 0      // Celsius
     property bool hasTemp: false
+    property int refreshInterval: 1200 // dynamic ms from ThemeConfig
 
     // Internal state for CPU calculation
     property var _prevCpu: null
@@ -120,9 +121,9 @@ Item {
         }
     }
 
-    // Timer for CPU & RAM (~1.2s)
+    // Timer for CPU & RAM (dynamic interval)
     Timer {
-        interval: 1200
+        interval: root.refreshInterval
         running: true
         repeat: true
         triggeredOnStart: true
